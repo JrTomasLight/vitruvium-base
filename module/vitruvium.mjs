@@ -1,6 +1,7 @@
 /**
  * «Витрувий» — игровая система для Foundry VTT v13.
- * Точка входа: регистрирует справочник правил, кубик, документы и листы.
+ * Точка входа: регистрирует справочник правил, кубик, документы, листы
+ * и быстрые действия.
  */
 import { VITRUVIUM } from "./config.mjs";
 import { CharacterData } from "./data/character.mjs";
@@ -9,6 +10,9 @@ import { VitruviumCharacterSheet } from "./sheets/character-sheet.mjs";
 import { VitruviumDie } from "./dice/vitruvium-die.mjs";
 import { rollCheck } from "./dice/check.mjs";
 import { promptCheck } from "./dice/check-dialog.mjs";
+import { actions } from "./actions/index.mjs";
+import { activateChatCard } from "./chat.mjs";
+import { addTokenHUDButtons } from "./hud.mjs";
 import { registerDiceSoNice } from "./integrations/dice-so-nice.mjs";
 
 Hooks.once("init", () => {
@@ -17,7 +21,12 @@ Hooks.once("init", () => {
   CONFIG.VITRUVIUM = VITRUVIUM;
 
   // Программный интерфейс для макросов и модулей.
-  game.vitruvium = { rollCheck, promptCheck, VitruviumDie };
+  game.vitruvium = {
+    actions,
+    rollCheck,
+    promptCheck,
+    VitruviumDie
+  };
 
   // Кубик «Витрувия»: формула `3dv`
   CONFIG.Dice.terms[VitruviumDie.DENOMINATION] = VitruviumDie;
@@ -38,3 +47,9 @@ Hooks.once("init", () => {
   // Необязательные модули
   registerDiceSoNice();
 });
+
+// Кнопки в карточках чата
+Hooks.on("renderChatMessageHTML", activateChatCard);
+
+// Кнопки на HUD токена
+Hooks.on("renderTokenHUD", addTokenHUDButtons);

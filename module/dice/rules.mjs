@@ -99,3 +99,15 @@ export function chooseAttempt(totals, net) {
 export function isSuccess(successes, difficulty) {
   return successes >= difficulty;
 }
+
+/**
+ * Новый запас вдохновения после награды или траты.
+ * Запас не бывает меньше 0 и больше максимума (по правилам — 6).
+ * @param {number} value   Текущий запас.
+ * @param {number} amount  Сколько добавить (отрицательное — потратить).
+ * @param {number} [max]   Максимум; по умолчанию из config.mjs.
+ * @returns {number}
+ */
+export function addInspiration(value, amount, max = VITRUVIUM.inspiration.max) {
+  return clamp((Number(value) || 0) + (Number(amount) || 0), 0, max);
+}

@@ -50,6 +50,53 @@ export function seededRandom(seed) {
   };
 }
 
+let macroCounter = 0;
+
+/** Упрощённый макрос: id, флаги, владелец. */
+class FakeMacro {
+  constructor(data) {
+    Object.assign(this, structuredClone(data));
+    this.id = `macro${++macroCounter}`;
+    this.isOwner = true;
+  }
+
+  getFlag(scope, key) {
+    return this.flags?.[scope]?.[key];
+  }
+}
+
+/** Упрощённая коллекция game.macros. */
+class MacroCollection {
+  contents = [];
+  find(fn) { return this.contents.find(fn); }
+  has(id) { return this.contents.some(macro => macro.id === id); }
+}
+
+/** Упрощённый актёр: имя, данные, владение, обновление. */
+export class FakeActor {
+  constructor({ name = "Отто Хорн", system = {}, isOwner = true } = {}) {
+    this.name = name;
+    this.system = system;
+    this.isOwner = isOwner;
+    this.uuid = `Actor.${name}`;
+    this.updates = [];
+  }
+
+  async update(data) {
+    this.updates.push(data);
+    for ( const [path, value] of Object.entries(data) ) {
+      const parts = path.split(".");
+      const last = parts.pop();
+      parts.reduce((node, part) => node[part], this)[last] = value;
+    }
+  }
+
+  async rollCharacteristic(characteristic) {
+    this.rolled = characteristic ?? "(окно)";
+    return { characteristic };
+  }
+}
+
 /**
  * Установить глобальные заглушки Foundry.
  * @param {object} [options]
@@ -64,6 +111,14 @@ export async function installFoundry({ seed = 1 } = {}) {
     notifications: [],
     renders: [],
     rollMode: "publicroll",
+    warnings: [],
+    errors: [],
+    dialogResults: [],
+    createdMacros: [],
+    hotbarAssignments: [],
+
+    /** Ответ следующего окна DialogV2.wait (данные формы или null). */
+    queueDialog(result) { this.dialogResults.push(result); },
 
     /** Задать грани для следующих бросков (по одной на кубик, по порядку). */
     queueFaces(faces) { this.faceQueue.push(...faces); },
@@ -74,6 +129,17 @@ export async function installFoundry({ seed = 1 } = {}) {
       this.messages.length = 0;
       this.notifications.length = 0;
       this.renders.length = 0;
+      this.warnings.length = 0;
+      this.errors.length = 0;
+      this.dialogResults.length = 0;
+      this.createdMacros.length = 0;
+      this.hotbarAssignments.length = 0;
+      globalThis.game.macros.contents.length = 0;
+      globalThis.game.user.isGM = false;
+      globalThis.game.user.character = null;
+      globalThis.game.user.hotbar = {};
+      globalThis.canvas.ready = false;
+      globalThis.canvas.tokens.controlled = [];
       if ( newSeed !== undefined ) this.random = seededRandom(newSeed);
     },
 
@@ -149,8 +215,14 @@ export async function installFoundry({ seed = 1 } = {}) {
       },
       api: {
         DialogV2: {
-          wait: async () => { throw new Error("В тестах окно проверки не открывается"); }
+          wait: async () => {
+            if ( !env.dialogResults.length ) throw new Error("Окно открылось, но ответ не задан: env.queueDialog(...)");
+            return env.dialogResults.shift();
+          }
         }
+      },
+      ux: {
+        FormDataExtended: class { constructor() { this.object = {}; } }
       }
     },
     utils: { randomID: () => "test" }
@@ -171,10 +243,41 @@ export async function installFoundry({ seed = 1 } = {}) {
         return text.replace(/\{(\w+)\}/g, (_, name) => String(data[name]));
       }
     },
-    settings: { get: (scope, key) => ((scope === "core") && (key === "rollMode") ? env.rollMode : undefined) }
+    settings: { get: (scope, key) => ((scope === "core") && (key === "rollMode") ? env.rollMode : undefined) },
+    user: {
+      isGM: false,
+      character: null,
+      hotbar: {},
+      async assignHotbarMacro(macro, slot) {
+        env.hotbarAssignments.push({ macro, slot });
+        this.hotbar[slot] = macro.id;
+      }
+    },
+    macros: new MacroCollection()
   };
 
-  globalThis.ui = { notifications: { info: message => env.notifications.push(message) } };
+  globalThis.canvas = { ready: false, tokens: { controlled: [] } };
+
+  globalThis.ui = {
+    notifications: {
+      info: message => env.notifications.push(message),
+      warn: message => env.warnings.push(message),
+      error: message => env.errors.push(message)
+    }
+  };
+
+  globalThis.Macro = {
+    implementation: {
+      create: async data => {
+        const macro = new FakeMacro(data);
+        env.createdMacros.push(macro);
+        globalThis.game.macros.contents.push(macro);
+        return macro;
+      }
+    }
+  };
+
+  globalThis.fromUuidSync = uuid => env.uuidMap?.[uuid] ?? null;
 
   globalThis.Roll = Roll;
 

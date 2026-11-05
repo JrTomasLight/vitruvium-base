@@ -6,8 +6,8 @@ const TEMPLATES = "systems/vitruvium/templates/actor";
 /**
  * Лист персонажа игрока (ApplicationV2).
  *
- * Состоит из шапки (портрет, имя, концепция, уровень, вдохновение)
- * и вкладок «Характеристики» и «Биография».
+ * Состоит из шапки (портрет, имя, концепция, уровень, вдохновение,
+ * кнопки «Проверка» и «Заявка») и вкладок «Характеристики» и «Биография».
  * Поля формы сохраняются сразу при изменении.
  */
 export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
@@ -21,6 +21,8 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
       editPortrait: VitruviumCharacterSheet.#onEditPortrait,
       setCharacteristic: VitruviumCharacterSheet.#onSetCharacteristic,
       rollCharacteristic: VitruviumCharacterSheet.#onRollCharacteristic,
+      rollCheck: VitruviumCharacterSheet.#onRollCheck,
+      declare: VitruviumCharacterSheet.#onDeclare,
       setInspiration: VitruviumCharacterSheet.#onSetInspiration
     }
   };
@@ -74,6 +76,7 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
       actor,
       system,
       editable: this.isEditable,
+      owner: actor.isOwner,
       tabs: this.#prepareTabs(),
       tierOptions,
       tierHint: game.i18n.localize(config.tiers[system.tier]?.hint ?? ""),
@@ -182,6 +185,24 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
   static async #onRollCharacteristic(event, target) {
     if ( !this.document.isOwner ) return;
     return this.document.rollCharacteristic(target.dataset.characteristic);
+  }
+
+  /**
+   * Кнопка «Проверка» в шапке: окно проверки с выбором характеристики.
+   * @this {VitruviumCharacterSheet}
+   */
+  static async #onRollCheck(event, target) {
+    if ( !this.document.isOwner ) return;
+    return this.document.rollCharacteristic();
+  }
+
+  /**
+   * Кнопка «Заявка» в шапке: заявить действие и цель персонажа.
+   * @this {VitruviumCharacterSheet}
+   */
+  static async #onDeclare(event, target) {
+    if ( !this.document.isOwner ) return;
+    return game.vitruvium.actions.declare({ actor: this.document });
   }
 
   /**

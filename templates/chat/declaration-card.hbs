@@ -1,0 +1,21 @@
+<div class="vitruvium chat-card declaration-card">
+  <header class="card-header">
+    <h3 class="card-title">{{localize "VITRUVIUM.Declaration.Title"}}</h3>
+  </header>
+
+  <dl class="declaration-body">
+    <dt>{{localize "VITRUVIUM.Declaration.Action"}}</dt>
+    <dd>{{action}}</dd>
+    {{#if goal}}
+    <dt>{{localize "VITRUVIUM.Declaration.Goal"}}</dt>
+    <dd>{{goal}}</dd>
+    {{/if}}
+  </dl>
+
+  <footer class="card-actions">
+    <button type="button" class="vit-button primary" data-vitruvium-action="declarationCheck">
+      <i class="fa-solid fa-dice" inert></i>
+      <span>{{localize "VITRUVIUM.Declaration.Check"}}</span>
+    </button>
+  </footer>
+</div>

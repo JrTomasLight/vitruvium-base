@@ -34,5 +34,18 @@
         <span class="counter">{{system.inspiration.value}}/{{system.inspiration.max}}</span>
       </div>
     </div>
+
+    {{#if owner}}
+    <div class="sheet-actions">
+      <button type="button" class="vit-button primary" data-action="rollCheck">
+        <i class="fa-solid fa-dice" inert></i>
+        <span>{{localize "VITRUVIUM.Sheet.Check"}}</span>
+      </button>
+      <button type="button" class="vit-button" data-action="declare">
+        <i class="fa-solid fa-hand" inert></i>
+        <span>{{localize "VITRUVIUM.Sheet.Declare"}}</span>
+      </button>
+    </div>
+    {{/if}}
   </div>
 </header>

@@ -1,0 +1,16 @@
+<div class="vitruvium chat-card inspiration-card">
+  <header class="card-header">
+    <h3 class="card-title">{{localize "VITRUVIUM.Inspiration.Title"}}</h3>
+  </header>
+
+  <ul class="inspiration-rows">
+    {{#each rows as |row|}}
+    <li class="inspiration-row {{#if row.capped}}capped{{/if}}">
+      <span class="inspiration-name">{{row.name}}</span>
+      <span class="inspiration-value">
+        {{#if row.capped}}{{localize "VITRUVIUM.Inspiration.Capped" max=row.max}}{{else}}{{localize "VITRUVIUM.Inspiration.Value" value=row.value max=row.max}}{{/if}}
+      </span>
+    </li>
+    {{/each}}
+  </ul>
+</div>
