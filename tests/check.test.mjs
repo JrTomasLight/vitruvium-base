@@ -139,12 +139,15 @@ describe("rollCheck: сообщение в чате", () => {
     await rollCheck({ label: "Внимание", dice: 3, difficulty: 6, disadvantages: 1 });
     const { template, data } = env.renders.at(-1);
 
-    assert.equal(template, "systems/vitruvium/templates/chat/check-card.hbs");
+    assert.equal(template, "systems/vitruvium/templates/chat/dice-card.hbs");
     assert.equal(data.pool, 3);
     assert.equal(data.multiple, true);
     assert.equal(data.success, false);
     assert.equal(data.chosenHint, "VITRUVIUM.Check.ChosenWorst");
-    assert.match(data.modeLabel, /помеха/);
+    assert.equal(data.modeLabel, "Помеха");
+    assert.equal(data.poolLabel, "3 кубика");
+    assert.equal(data.hasDifficulty, true);
+    assert.equal(data.outcomeClass, "failure");
     assert.deepEqual(data.attempts.map(a => a.chosen), [true, false]);
     assert.deepEqual(data.attempts[0].dice.map(d => d.successes), [0, 1, 2]);
     assert.deepEqual(data.attempts[0].dice.map(d => d.marks.length), [0, 1, 2]);

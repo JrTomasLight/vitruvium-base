@@ -25,6 +25,16 @@ function keysIn(file) {
   return [...text.matchAll(/["'`](VITRUVIUM\.[A-Z][A-Za-z0-9_.]*)["'`]/g)].map(m => m[1]);
 }
 
+/** Формы русских склонений для ключей, которые передаются в pluralKey / formatCount. */
+const PLURAL_FORMS = ["one", "few", "many", "other"];
+
+/** Строка перевода или основа склонения со всеми четырьмя формами. */
+function isTranslated(key) {
+  const value = lookup(key);
+  if ( typeof value === "string" ) return true;
+  return Boolean(value) && PLURAL_FORMS.every(form => typeof value[form] === "string");
+}
+
 describe("Локализация", () => {
   const files = [...filesIn("module", ".mjs"), ...filesIn("templates", ".hbs")];
 
@@ -32,7 +42,7 @@ describe("Локализация", () => {
     const keys = keysIn(file);
     if ( !keys.length ) continue;
     it(path.relative(ROOT, file), () => {
-      const missing = keys.filter(key => typeof lookup(key) !== "string");
+      const missing = keys.filter(key => !isTranslated(key));
       assert.deepEqual(missing, [], `нет в ru.json: ${missing.join(", ")}`);
     });
   }
@@ -41,6 +51,18 @@ describe("Локализация", () => {
     for ( const successes of new Set(VITRUVIUM.dice.faces) ) {
       assert.equal(typeof lookup(`VITRUVIUM.Die.Face${successes}`), "string", `Face${successes}`);
     }
+  });
+
+  it("подписи режима броска (VITRUVIUM.Check.Mode.*)", () => {
+    for ( const kind of ["Advantage", "Disadvantage"] ) {
+      for ( let count = 1; count <= VITRUVIUM.maxAdvantages; count++ ) {
+        assert.equal(typeof lookup(`VITRUVIUM.Check.Mode.${kind}${count}`), "string", `${kind}${count}`);
+      }
+    }
+  });
+
+  it("основы склонений содержат все формы", () => {
+    for ( const key of ["VITRUVIUM.Check.Dice"] ) assert.ok(isTranslated(key), key);
   });
 
   it("названия типов документов", () => {

@@ -1,0 +1,37 @@
+<div class="vitruvium chat-card dice-card {{outcomeClass}}">
+  <header class="card-header">
+    <h3 class="card-title">{{label}}</h3>
+    <p class="card-meta">
+      <span>{{poolLabel}}</span>
+      {{#if modeLabel}}<span class="card-mode">{{modeLabel}}</span>{{/if}}
+    </p>
+  </header>
+
+  <ol class="dice-attempts">
+    {{#each attempts as |attempt|}}
+    <li class="dice-attempt {{#if attempt.chosen}}chosen{{/if}}">
+      <ol class="dice-faces">
+        {{#each attempt.dice as |die|}}
+        <li class="vit-face successes-{{die.successes}}" data-tooltip="{{die.label}}" aria-label="{{die.label}}">
+          {{#each die.marks}}<span class="vit-mark" inert></span>{{/each}}
+        </li>
+        {{/each}}
+      </ol>
+      <span class="attempt-total">{{attempt.successes}}</span>
+    </li>
+    {{/each}}
+  </ol>
+  {{#if multiple}}<p class="card-note">{{localize chosenHint}}</p>{{/if}}
+
+  <div class="card-result">
+    {{#if hasDifficulty}}
+    <span class="result-successes">{{localize "VITRUVIUM.Check.SuccessesOf" successes=successes difficulty=difficulty}}</span>
+    <span class="result-outcome">
+      {{#if success}}{{localize "VITRUVIUM.Check.Success"}}{{else}}{{localize "VITRUVIUM.Check.Failure"}}{{/if}}
+    </span>
+    {{else}}
+    <span class="result-successes">{{localize "VITRUVIUM.Dice.Successes" successes=successes}}</span>
+    {{/if}}
+  </div>
+  {{#if hasDifficulty}}{{#unless success}}<p class="card-note">{{localize "VITRUVIUM.Check.PartialHint"}}</p>{{/unless}}{{/if}}
+</div>

@@ -1,4 +1,5 @@
 import { VitruviumDie } from "./vitruvium-die.mjs";
+import { formatCount } from "../helpers/i18n.mjs";
 import {
   attemptCount, chooseAttempt, clampDifficulty, clampPool, isSuccess, netAdvantage, successesOnFace
 } from "./rules.mjs";
@@ -6,7 +7,7 @@ import {
 // Чистые правила доступны и отсюда, чтобы не менять существующий импорт.
 export { clampPool, netAdvantage };
 
-const CHAT_TEMPLATE = "systems/vitruvium/templates/chat/check-card.hbs";
+const CHAT_TEMPLATE = "systems/vitruvium/templates/chat/dice-card.hbs";
 
 /**
  * @typedef {object} CheckOptions
@@ -73,10 +74,62 @@ export async function rollCheck({
 }
 
 /**
+ * Свободный бросок кубиков без сложности: просто посчитать успехи.
+ * Например, когда мастер хочет узнать «насколько хорошо», а не «удалось ли».
+ *
+ * @param {object} options
+ * @param {Actor} [options.actor]     От чьего имени бросок.
+ * @param {string} [options.label]    Подпись броска; по умолчанию «Бросок кубиков».
+ * @param {number} options.dice       Размер пула (1–6).
+ * @param {string} [options.rollMode]
+ * @returns {Promise<{rolls: Roll[], successes: number, message: ChatMessage}>}
+ */
+export async function rollDice({ actor, label, dice, rollMode } = {}) {
+  const pool = clampPool(dice);
+  label ||= game.i18n.localize("VITRUVIUM.Dice.Title");
+  const roll = new Roll(`${pool}d${VitruviumDie.DENOMINATION}`);
+  await roll.evaluate();
+
+  const result = { rolls: [roll], chosenIndex: 0, successes: roll.total };
+  result.message = await createDiceMessage({
+    actor, label, pool, net: 0, rollMode, ...result,
+    flavor: label,
+    flags: { roll: { label, pool, successes: roll.total } }
+  });
+  return result;
+}
+
+/**
  * Собрать и отправить карточку проверки в чат.
  * @returns {Promise<ChatMessage>}
  */
-async function createCheckMessage({ actor, label, pool, net, rollMode, rolls, chosenIndex, successes, difficulty, success }) {
+function createCheckMessage({ label, net, chosenIndex, successes, difficulty, success, pool, ...options }) {
+  return createDiceMessage({
+    ...options, label, net, chosenIndex, successes, difficulty, success, pool,
+    flavor: game.i18n.format("VITRUVIUM.Check.Flavor", { label }),
+    flags: { check: { label, pool, difficulty, net, successes, success, chosenIndex } }
+  });
+}
+
+/**
+ * Подпись режима броска: «Преимущество», «Две помехи» и т. п.
+ * @param {number} net  Итог преимуществ и помех.
+ * @returns {string}    Пустая строка для обычного броска.
+ */
+export function advantageLabel(net) {
+  if ( !net ) return "";
+  const kind = net > 0 ? "Advantage" : "Disadvantage";
+  return game.i18n.localize(`VITRUVIUM.Check.Mode.${kind}${Math.abs(net)}`);
+}
+
+/**
+ * Карточка броска в чате: общая для проверки и свободного броска.
+ * Если передана сложность (`difficulty`), карточка показывает итог проверки.
+ * @returns {Promise<ChatMessage>}
+ */
+async function createDiceMessage({
+  actor, label, pool, net, rollMode, rolls, chosenIndex, successes, difficulty, success, flavor, flags
+}) {
   const attempts = rolls.map((roll, index) => ({
     chosen: index === chosenIndex,
     successes: roll.total,
@@ -90,19 +143,17 @@ async function createCheckMessage({ actor, label, pool, net, rollMode, rolls, ch
     }))
   }));
 
-  let modeLabel = "";
-  if ( net !== 0 ) {
-    const key = net > 0 ? "VITRUVIUM.Check.AdvantageCount" : "VITRUVIUM.Check.DisadvantageCount";
-    modeLabel = game.i18n.format(key, { count: Math.abs(net) });
-  }
-
+  const hasDifficulty = difficulty !== undefined;
   const content = await foundry.applications.handlebars.renderTemplate(CHAT_TEMPLATE, {
     label,
     pool,
+    poolLabel: formatCount("VITRUVIUM.Check.Dice", pool),
+    hasDifficulty,
     difficulty,
     successes,
     success,
-    modeLabel,
+    outcomeClass: hasDifficulty ? (success ? "success" : "failure") : "",
+    modeLabel: advantageLabel(net),
     chosenHint: net > 0 ? "VITRUVIUM.Check.ChosenBest" : "VITRUVIUM.Check.ChosenWorst",
     multiple: attempts.length > 1,
     attempts
@@ -110,15 +161,11 @@ async function createCheckMessage({ actor, label, pool, net, rollMode, rolls, ch
 
   const messageData = {
     speaker: ChatMessage.implementation.getSpeaker({ actor }),
-    flavor: game.i18n.format("VITRUVIUM.Check.Flavor", { label }),
+    flavor,
     content,
     rolls,
     sound: CONFIG.sounds.dice,
-    flags: {
-      vitruvium: {
-        check: { label, pool, difficulty, net, successes, success, chosenIndex }
-      }
-    }
+    flags: { vitruvium: flags }
   };
   ChatMessage.implementation.applyRollMode(messageData, rollMode ?? game.settings.get("core", "rollMode"));
   return ChatMessage.implementation.create(messageData);

@@ -89,19 +89,34 @@
       "Cancel": "Отмена",
       "RollCharacteristic": "Проверка: {characteristic}",
       "Flavor": "Проверка характеристики «{label}»",
-      "PoolSize": "Кубиков: {count}",
-      "AdvantageCount": "преимущество ×{count}",
-      "DisadvantageCount": "помеха ×{count}",
       "ChosenBest": "Засчитан лучший бросок (преимущество).",
       "ChosenWorst": "Засчитан худший бросок (помеха).",
       "SuccessesOf": "Успехов: {successes} из {difficulty}",
       "Success": "Успех",
       "Failure": "Провал",
       "PartialHint": "Если результат близок к сложности, мастер может засчитать частичный успех: цель достигнута не полностью или с осложнениями.",
-      "PoolCapped": "В пуле не может быть больше {max} кубиков. Бросается {max} вместо {requested}."
+      "PoolCapped": "В пуле не может быть больше {max} кубиков. Бросается {max} вместо {requested}.",
+      "Dice": {
+        "one": "{count} кубик",
+        "few": "{count} кубика",
+        "many": "{count} кубиков",
+        "other": "{count} кубика"
+      },
+      "Mode": {
+        "Advantage1": "Преимущество",
+        "Advantage2": "Два преимущества",
+        "Disadvantage1": "Помеха",
+        "Disadvantage2": "Две помехи"
+      }
     },
     "DiceSoNice": {
       "Colorset": "Пергамент и сангина"
+    },
+    "Dice": {
+      "Title": "Бросок кубиков",
+      "Count": "Сколько кубиков",
+      "Hint": "Бросок без сложности: в чате будет только число успехов.",
+      "Successes": "Успехов: {successes}"
     }
   }
 }
