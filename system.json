@@ -32,6 +32,14 @@
       "path": "lang/ru.json"
     }
   ],
+  "documentTypes": {
+    "Actor": {
+      "character": {
+        "htmlFields": ["biography"]
+      }
+    }
+  },
+  "primaryTokenAttribute": "inspiration",
   "url": "https://github.com/JrTomasLight/vitruvium-base",
   "manifest": "https://github.com/JrTomasLight/vitruvium-base/releases/latest/download/system.json",
   "download": "https://github.com/JrTomasLight/vitruvium-base/releases/latest/download/vitruvium.zip",

@@ -1,4 +1,9 @@
 {
+  "TYPES": {
+    "Actor": {
+      "character": "Персонаж"
+    }
+  },
   "VITRUVIUM": {
     "SystemTitle": "Витрувий",
     "Characteristic": {
