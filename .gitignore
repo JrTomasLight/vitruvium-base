@@ -1,0 +1,21 @@
+# Старые версии правил — только локально
+Vitruvium Beta 0.1.docx
+Vitruvium Beta 0.1.pdf
+Vitruvium Beta 2.0.docx
+Vitruvium Beta 2.0.pdf
+
+# Локальные материалы
+Шаблон персонажа.docx
+Легенда о Визергуте/
+Чужие материалы/
+
+# Временные файлы Word
+~$*
+
+# Локальные настройки Claude Code
+.claude/settings.local.json
+
+# Системный мусор
+Thumbs.db
+desktop.ini
+.DS_Store
