@@ -1,0 +1,14 @@
+# Текстовые файлы всегда хранятся и выгружаются с переводами строк LF
+* text=auto eol=lf
+
+# Двоичные файлы не трогаем
+*.docx binary
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.svg text
+*.woff binary
+*.woff2 binary
+*.zip binary

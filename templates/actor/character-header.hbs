@@ -1,0 +1,38 @@
+<header class="sheet-header">
+  <div class="portrait-frame">
+    <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}"
+         data-action="editPortrait" data-tooltip="VITRUVIUM.Sheet.EditPortrait">
+  </div>
+
+  <div class="header-fields">
+    <input class="actor-name" type="text" name="name" value="{{actor.name}}"
+           placeholder="{{localize 'VITRUVIUM.Sheet.NamePlaceholder'}}"
+           aria-label="{{localize 'VITRUVIUM.Sheet.NamePlaceholder'}}">
+
+    <input class="actor-concept" type="text" name="system.concept" value="{{system.concept}}"
+           placeholder="{{localize 'VITRUVIUM.Sheet.ConceptPlaceholder'}}"
+           aria-label="{{localize 'VITRUVIUM.Sheet.Concept'}}">
+
+    <div class="header-row">
+      <label class="tier" data-tooltip="{{tierHint}}">
+        <span class="field-label">{{localize "VITRUVIUM.Tier.Label"}}</span>
+        <select name="system.tier">
+          {{selectOptions tierOptions selected=system.tier}}
+        </select>
+      </label>
+
+      <div class="inspiration" role="group" aria-label="{{localize 'VITRUVIUM.Sheet.Inspiration'}}"
+           data-tooltip="VITRUVIUM.Sheet.InspirationHint">
+        <span class="field-label">{{localize "VITRUVIUM.Sheet.Inspiration"}}</span>
+        <div class="pips">
+          {{#each inspirationPips as |pip|}}
+          <button type="button" class="pip {{#if pip.filled}}filled{{/if}}"
+                  data-action="setInspiration" data-value="{{pip.value}}"
+                  aria-label="{{pip.label}}" aria-pressed="{{#if pip.filled}}true{{else}}false{{/if}}"></button>
+          {{/each}}
+        </div>
+        <span class="counter">{{system.inspiration.value}}/{{system.inspiration.max}}</span>
+      </div>
+    </div>
+  </div>
+</header>
