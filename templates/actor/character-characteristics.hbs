@@ -1,0 +1,28 @@
+<section class="tab characteristics {{tab.cssClass}}" data-group="primary" data-tab="characteristics">
+  <div class="budget {{#if budget.overspent}}overspent{{/if}}" data-tooltip="VITRUVIUM.Sheet.BudgetHint">
+    <span class="field-label">{{localize "VITRUVIUM.Sheet.Budget"}}</span>
+    <span class="budget-value">
+      {{localize "VITRUVIUM.Sheet.BudgetSpent" spent=budget.spent budget=budget.budget}}
+    </span>
+  </div>
+
+  <ol class="characteristic-list">
+    {{#each characteristics as |characteristic|}}
+    <li class="characteristic" data-characteristic="{{characteristic.key}}">
+      <i class="characteristic-icon {{characteristic.icon}}" inert></i>
+      <div class="characteristic-info">
+        <h3 class="characteristic-name">{{characteristic.label}}</h3>
+        <p class="characteristic-hint">{{characteristic.hint}}</p>
+      </div>
+      <div class="pips" role="group" aria-label="{{characteristic.label}}">
+        {{#each characteristic.pips as |pip|}}
+        <button type="button" class="pip {{#if pip.filled}}filled{{/if}}"
+                data-action="setCharacteristic" data-characteristic="{{pip.key}}" data-value="{{pip.value}}"
+                aria-label="{{pip.label}}" aria-pressed="{{#if pip.filled}}true{{else}}false{{/if}}"></button>
+        {{/each}}
+      </div>
+      <span class="characteristic-value">{{characteristic.value}}</span>
+    </li>
+    {{/each}}
+  </ol>
+</section>
