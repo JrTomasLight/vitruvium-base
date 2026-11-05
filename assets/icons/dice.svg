@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Бросок кубиков">
+  <title>Бросок кубиков</title>
+  <!-- Иконка системы «Витрувий»: круг, вписанный в квадрат, чернила и сангина -->
+  <rect x="3" y="3" width="122" height="122" rx="6" fill="#F3E9D2" stroke="#6B5640" stroke-width="4"/>
+  <circle cx="64" cy="64" r="54" fill="none" stroke="#B9A37C" stroke-width="2"/>
+  <rect x="18" y="52" width="36" height="36" rx="4" fill="#F3E9D2" stroke="#3B2A1A" stroke-width="3.5"/>
+  <circle cx="36.0" cy="70.0" r="14.0" fill="none" stroke="#B9A37C" stroke-width="1.5"/>
+  <rect x="46" y="26" width="36" height="36" rx="4" fill="#F3E9D2" stroke="#3B2A1A" stroke-width="3.5"/>
+  <circle cx="64.0" cy="44.0" r="14.0" fill="none" stroke="#B9A37C" stroke-width="1.5"/>
+  <circle cx="64.0" cy="44.0" r="4.32" fill="#963A21"/>
+  <rect x="74" y="56" width="36" height="36" rx="4" fill="#F3E9D2" stroke="#3B2A1A" stroke-width="3.5"/>
+  <circle cx="92.0" cy="74.0" r="14.0" fill="none" stroke="#B9A37C" stroke-width="1.5"/>
+  <circle cx="85.952" cy="74.0" r="4.32" fill="#963A21"/>
+  <circle cx="98.048" cy="74.0" r="4.32" fill="#963A21"/>
+</svg>

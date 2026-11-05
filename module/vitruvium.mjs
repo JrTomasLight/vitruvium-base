@@ -1,7 +1,7 @@
 /**
  * «Витрувий» — игровая система для Foundry VTT v13.
- * Точка входа: регистрирует справочник правил, кубик, документы, листы
- * и быстрые действия.
+ * Точка входа: регистрирует справочник правил, кубик, документы, листы,
+ * быстрые действия и библиотеку макросов.
  */
 import { VITRUVIUM } from "./config.mjs";
 import { CharacterData } from "./data/character.mjs";
@@ -13,6 +13,8 @@ import { promptCheck } from "./dice/check-dialog.mjs";
 import { actions } from "./actions/index.mjs";
 import { activateChatCard } from "./chat.mjs";
 import { addTokenHUDButtons } from "./hud.mjs";
+import { MacroLibrary, addLibraryButton, openMacroLibrary } from "./apps/macro-library.mjs";
+import { MACRO_LIBRARY, addToHotbar, onHotbarDrop } from "./macros/library.mjs";
 import { registerDiceSoNice } from "./integrations/dice-so-nice.mjs";
 
 Hooks.once("init", () => {
@@ -25,7 +27,10 @@ Hooks.once("init", () => {
     actions,
     rollCheck,
     promptCheck,
-    VitruviumDie
+    openMacroLibrary,
+    macros: { library: MACRO_LIBRARY, addToHotbar },
+    VitruviumDie,
+    MacroLibrary
   };
 
   // Кубик «Витрувия»: формула `3dv`
@@ -53,3 +58,7 @@ Hooks.on("renderChatMessageHTML", activateChatCard);
 
 // Кнопки на HUD токена
 Hooks.on("renderTokenHUD", addTokenHUDButtons);
+
+// Библиотека макросов: кнопка во вкладке «Макросы» и перетаскивание на панель
+Hooks.on("renderMacroDirectory", addLibraryButton);
+Hooks.on("hotbarDrop", onHotbarDrop);

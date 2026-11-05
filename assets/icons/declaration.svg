@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Заявка">
+  <title>Заявка</title>
+  <!-- Иконка системы «Витрувий»: круг, вписанный в квадрат, чернила и сангина -->
+  <rect x="3" y="3" width="122" height="122" rx="6" fill="#F3E9D2" stroke="#6B5640" stroke-width="4"/>
+  <circle cx="64" cy="64" r="54" fill="none" stroke="#B9A37C" stroke-width="2"/>
+  <path d="M96 22 C66 30 46 56 40 92 L48 95 C56 64 72 44 98 30 Z" fill="#3B2A1A"/>
+  <path d="M60 60 L90 32" stroke="#F3E9D2" stroke-width="2" stroke-linecap="round"/>
+  <path d="M40 92 L35 104" stroke="#3B2A1A" stroke-width="4" stroke-linecap="round"/>
+  <path d="M28 108 C44 102 60 112 76 106 S96 102 102 106" fill="none" stroke="#963A21" stroke-width="4" stroke-linecap="round"/>
+</svg>

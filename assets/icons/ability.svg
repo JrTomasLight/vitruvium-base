@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Применить способность">
+  <title>Применить способность</title>
+  <!-- Иконка системы «Витрувий»: круг, вписанный в квадрат, чернила и сангина -->
+  <rect x="3" y="3" width="122" height="122" rx="6" fill="#F3E9D2" stroke="#6B5640" stroke-width="4"/>
+  <circle cx="64" cy="64" r="54" fill="none" stroke="#B9A37C" stroke-width="2"/>
+  <path d="M38 102 A40 40 0 0 1 90 102" fill="none" stroke="#963A21" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 7"/>
+  <path d="M64 28 L42 100 M64 28 L86 100" stroke="#3B2A1A" stroke-width="5" stroke-linecap="round"/>
+  <path d="M51 70 H77" stroke="#3B2A1A" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="64" cy="26" r="7" fill="#F3E9D2" stroke="#3B2A1A" stroke-width="3.5"/>
+</svg>

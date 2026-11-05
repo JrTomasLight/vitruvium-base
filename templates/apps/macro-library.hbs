@@ -1,0 +1,27 @@
+<div class="library">
+  <p class="library-intro">{{localize "VITRUVIUM.MacroLibrary.Intro"}}</p>
+
+  {{#each groups as |group|}}
+  <section class="library-group">
+    <h2 class="library-group-title">{{localize group.label}}</h2>
+    <ul class="library-list">
+      {{#each group.entries as |entry|}}
+      <li class="library-entry {{#unless entry.available}}pending{{/unless}}" data-macro-key="{{entry.key}}"
+          {{#if entry.available}}draggable="true"{{/if}}>
+        <img class="library-icon" src="{{entry.img}}" alt="" width="40" height="40">
+        <div class="library-text">
+          <h3 class="library-name">{{entry.label}}</h3>
+          <p class="library-hint">{{entry.hint}}</p>
+          {{#unless entry.available}}<p class="library-pending">{{entry.pendingHint}}</p>{{/unless}}
+        </div>
+        <button type="button" class="vit-button" data-action="addToHotbar"
+                {{#unless entry.available}}disabled{{/unless}}>
+          <i class="fa-solid fa-plus" inert></i>
+          <span>{{localize "VITRUVIUM.MacroLibrary.AddToHotbar"}}</span>
+        </button>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+  {{/each}}
+</div>

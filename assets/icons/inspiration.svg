@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Вдохновение">
+  <title>Вдохновение</title>
+  <!-- Иконка системы «Витрувий»: круг, вписанный в квадрат, чернила и сангина -->
+  <rect x="3" y="3" width="122" height="122" rx="6" fill="#F3E9D2" stroke="#6B5640" stroke-width="4"/>
+  <circle cx="64" cy="64" r="54" fill="none" stroke="#B9A37C" stroke-width="2"/>
+  <polygon points="64.0,22.0 70.1,49.2 93.7,34.3 78.8,57.9 106.0,64.0 78.8,70.1 93.7,93.7 70.1,78.8 64.0,106.0 57.9,78.8 34.3,93.7 49.2,70.1 22.0,64.0 49.2,57.9 34.3,34.3 57.9,49.2" fill="#963A21" stroke="#3B2A1A" stroke-width="2" stroke-linejoin="round"/>
+  <circle cx="64" cy="64" r="6" fill="#F3E9D2" stroke="#3B2A1A" stroke-width="2"/>
+</svg>
