@@ -15,6 +15,24 @@
 - В `system.json` указываем `compatibility.minimum` и `compatibility.verified` = 13 (verified: `13.351`), `maximum` = 13.
 - Используем современные API v13: `TypeDataModel` для данных, ApplicationV2 / `HandlebarsApplicationMixin` для листов. Устаревшие API v12 не используем.
 
+## Структура системы
+
+- id системы: `vitruvium`. Пути в коде: `systems/vitruvium/...`. Папка установки в Foundry обязательно называется `vitruvium`.
+- `system.json` — манифест.
+- `module/vitruvium.mjs` — точка входа, хук `init`, регистрация документов и листов.
+- `module/config.mjs` — справочник правил (`CONFIG.VITRUVIUM`). Числовые константы правил держим только здесь.
+- `module/data/` — модели данных (TypeDataModel).
+- `module/documents/` — классы документов.
+- `module/sheets/` — листы (ApplicationV2).
+- `templates/` — Handlebars-шаблоны.
+- `styles/vitruvium.css` — стили. Палитра в CSS-переменных `--vit-*`. Лист всегда «бумажный», цвета внутри листа заданы явно, чтобы он читался и в тёмной теме Foundry.
+- `lang/ru.json` — локализация. В `system.json` она подключена и как `ru`, и как `en`. Так при английском интерфейсе Foundry не показываются сырые ключи.
+
+## Установка и релизы
+
+- Репозиторий приватный, поэтому установщик Foundry по манифесту до него не достучится. Пока систему ставят через `git clone ... vitruvium` в `Data/systems` и обновляют через `git pull`. Подробности — в README.
+- Релиз собирает `.github/workflows/release.yml` при пуше тега `vX.Y.Z`: версия берётся из тега, к релизу прикладываются `vitruvium.zip` и `system.json`. Теги и релизы создаём только по указанию владельца.
+
 ## Язык и оформление
 
 - Вся система полностью на **русском языке**: интерфейс, листы, сообщения в чате, подсказки, компендиумы, документация.
