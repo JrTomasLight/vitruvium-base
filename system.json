@@ -39,6 +39,15 @@
       }
     }
   },
+  "relationships": {
+    "recommends": [
+      {
+        "id": "dice-so-nice",
+        "type": "module",
+        "reason": "3D-кубики «Витрувия» с символами успехов на гранях. Необязательно: система работает и без модуля."
+      }
+    ]
+  },
   "primaryTokenAttribute": "inspiration",
   "url": "https://github.com/JrTomasLight/vitruvium-base",
   "manifest": "https://github.com/JrTomasLight/vitruvium-base/releases/latest/download/system.json",

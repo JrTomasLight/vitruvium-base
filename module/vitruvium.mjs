@@ -9,6 +9,7 @@ import { VitruviumCharacterSheet } from "./sheets/character-sheet.mjs";
 import { VitruviumDie } from "./dice/vitruvium-die.mjs";
 import { rollCheck } from "./dice/check.mjs";
 import { promptCheck } from "./dice/check-dialog.mjs";
+import { registerDiceSoNice } from "./integrations/dice-so-nice.mjs";
 
 Hooks.once("init", () => {
   console.log("Витрувий | Инициализация системы");
@@ -33,4 +34,7 @@ Hooks.once("init", () => {
     foundry.documents.Actor, "vitruvium", VitruviumCharacterSheet,
     { types: ["character"], makeDefault: true, label: "VITRUVIUM.Sheet.Character" }
   );
+
+  // Необязательные модули
+  registerDiceSoNice();
 });
