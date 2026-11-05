@@ -1,0 +1,17 @@
+/*
+ * «Витрувий» — стили системы.
+ * Оформление вдохновлено записными книжками Леонардо: пергамент,
+ * сепия и красный мел (сангина), мотив круга, вписанного в квадрат.
+ */
+
+.vitruvium {
+  --vit-parchment: #f3e9d2;
+  --vit-parchment-deep: #e6d6b2;
+  --vit-ink: #3b2a1a;
+  --vit-ink-soft: #6b5640;
+  --vit-sanguine: #a4442a;
+  --vit-sanguine-soft: #c97b5d;
+  --vit-line: #b9a37c;
+  --vit-gold: #b08d3c;
+  --vit-font-serif: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+}

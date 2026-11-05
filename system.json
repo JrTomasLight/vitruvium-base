@@ -1,0 +1,40 @@
+{
+  "id": "vitruvium",
+  "title": "Витрувий",
+  "description": "<p>Фанатская некоммерческая реализация универсальной настольной ролевой системы «Витрувий» (правила Beta 3.1) для Foundry VTT.</p><p><strong>Система находится в разработке (бета-тест)</strong> и предназначена только для сообщества бета-тестеров.</p><p>Авторы правил «Витрувия»: Георгий Воронин (автор системы), Екатерина Ширманкина, Лев Некрасов, Анна Шильгаас, Арсений Кочедыков, Анастасия Воробьёва, Вероника Слепоглазова, Ольга Ланцетова.</p>",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.351",
+    "maximum": "13"
+  },
+  "authors": [
+    {
+      "name": "JrTomasLight",
+      "url": "https://github.com/JrTomasLight"
+    }
+  ],
+  "esmodules": [
+    "module/vitruvium.mjs"
+  ],
+  "styles": [
+    "styles/vitruvium.css"
+  ],
+  "languages": [
+    {
+      "lang": "ru",
+      "name": "Русский",
+      "path": "lang/ru.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/ru.json"
+    }
+  ],
+  "url": "https://github.com/JrTomasLight/vitruvium-base",
+  "manifest": "https://github.com/JrTomasLight/vitruvium-base/releases/latest/download/system.json",
+  "download": "https://github.com/JrTomasLight/vitruvium-base/releases/latest/download/vitruvium.zip",
+  "readme": "https://github.com/JrTomasLight/vitruvium-base/blob/main/README.md",
+  "bugs": "https://github.com/JrTomasLight/vitruvium-base/issues"
+}
