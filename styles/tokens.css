@@ -1,0 +1,68 @@
+/*
+ * Токены дизайна «Витрувия».
+ *
+ * Палитра — пигменты мастерской Леонардо: бумага, железо-галловые чернила,
+ * сангина, серебряный карандаш, зелёная земля и голубая грунтовка.
+ * У каждого цвета одна роль (см. CLAUDE.md, «Принципы дизайна»).
+ * Контраст проверен по WCAG: текст ≥ 4.5:1 на обоих тонах бумаги,
+ * элементы управления и фокус ≥ 3:1.
+ *
+ * Токены объявлены на :root с префиксом --vit-, чтобы ими могли
+ * пользоваться и лист, и карточки в чате, и кнопки на HUD токена.
+ */
+
+:root {
+  /* ---- Пигменты (базовая палитра) ---- */
+  --vit-parchment: #f3e9d2;        /* бумага: фон всего «бумажного» */
+  --vit-parchment-deep: #e6d6b2;   /* тонированная бумага: подложки, выделенные зоны */
+  --vit-ink: #3b2a1a;              /* железо-галловые чернила: основной текст (11.4:1) */
+  --vit-ink-soft: #6b5640;         /* выцветшие чернила: подсказки, контуры элементов (5.7:1) */
+  --vit-sanguine: #963a21;         /* сангина: значения, главное действие, провал (6.0:1) */
+  --vit-sanguine-soft: #c97b5d;    /* растёртая сангина: только заливки, не текст */
+  --vit-line: #b9a37c;             /* серебряный карандаш: декоративные линии построения */
+  --vit-terre-verte: #43603a;      /* зелёная земля: только успех */
+  --vit-azure: #3e5873;            /* голубая грунтовка: фокус клавиатуры, пометки для мастера */
+
+  /* ---- Смысловые роли ---- */
+  --vit-color-text: var(--vit-ink);
+  --vit-color-text-muted: var(--vit-ink-soft);
+  --vit-color-accent: var(--vit-sanguine);
+  --vit-color-success: var(--vit-terre-verte);
+  --vit-color-failure: var(--vit-sanguine);
+  --vit-color-focus: var(--vit-azure);
+  --vit-color-control: var(--vit-ink-soft);
+
+  /* ---- Шрифты ---- */
+  --vit-font-text: "Alegreya", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --vit-font-caps: "Alegreya SC", "Alegreya", "Palatino Linotype", Georgia, serif;
+
+  /* ---- Шкала размеров: шаг 1.2 (малая терция) от размера интерфейса Foundry ---- */
+  --vit-step--2: 0.694rem;
+  --vit-step--1: 0.833rem;
+  --vit-step-0: 1rem;
+  --vit-step-1: 1.2rem;
+  --vit-step-2: 1.44rem;
+  --vit-step-3: 1.728rem;
+
+  /* ---- Отступы: кратны 0.25rem ---- */
+  --vit-space-1: 0.25rem;
+  --vit-space-2: 0.5rem;
+  --vit-space-3: 0.75rem;
+  --vit-space-4: 1rem;
+  --vit-space-5: 1.25rem;
+
+  /* ---- Линии и скругления ---- */
+  --vit-rule: 1px solid var(--vit-line);              /* линия построения */
+  --vit-rule-strong: 1px solid var(--vit-ink-soft);   /* контур элемента управления */
+  --vit-radius-control: 2px;                          /* кнопки и поля: почти прямые углы */
+  --vit-focus-ring: 2px solid var(--vit-color-focus);
+
+  /* ---- Движение ---- */
+  --vit-transition: 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --vit-transition: 0s;
+  }
+}

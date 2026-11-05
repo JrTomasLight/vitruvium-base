@@ -1,0 +1,248 @@
+/*
+ * Общие компоненты «Витрувия»: бумажная основа окон, подписи, поля,
+ * кнопки, отметки уровня и грань кубика.
+ *
+ * Всё «бумажное» всегда светлое, даже в тёмной теме Foundry, поэтому
+ * цвета текста, полей и кнопок заданы явно.
+ * Корневой класс — .vitruvium (окна системы и карточки в чате).
+ */
+
+/* ------------------------------------------------------------------ */
+/*  Бумажная основа окон системы                                       */
+/* ------------------------------------------------------------------ */
+
+.vitruvium.application .window-content {
+  color: var(--vit-color-text);
+  font-family: var(--vit-font-text);
+  font-size: var(--vit-step-0);
+  background:
+    radial-gradient(ellipse at 20% 0%, rgb(255 255 255 / 0.45), transparent 60%),
+    radial-gradient(ellipse at 100% 100%, rgb(176 141 60 / 0.18), transparent 55%),
+    var(--vit-parchment);
+}
+
+/* Подпись поля: настоящие капители Alegreya SC, а не «всё заглавными» */
+.vitruvium .field-label,
+.vitruvium.application .form-group > label {
+  font-family: var(--vit-font-caps);
+  font-size: var(--vit-step--1);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--vit-color-text-muted);
+}
+
+.vitruvium.application .hint,
+.vitruvium .hint {
+  font-size: var(--vit-step--1);
+  font-style: italic;
+  color: var(--vit-color-text-muted);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Поля ввода: «чернильная» линия снизу                               */
+/* ------------------------------------------------------------------ */
+
+.vitruvium.application input[type="text"],
+.vitruvium.application input[type="number"],
+.vitruvium.application select,
+.vitruvium.application textarea {
+  height: auto;
+  padding: 2px 4px;
+  color: var(--vit-color-text);
+  font-family: var(--vit-font-text);
+  font-size: inherit;
+  background: transparent;
+  border: none;
+  border-bottom: var(--vit-rule-strong);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.vitruvium.application textarea {
+  min-height: 4.5em;
+  padding: var(--vit-space-1) var(--vit-space-2);
+  line-height: 1.45;
+  border: var(--vit-rule-strong);
+  border-radius: var(--vit-radius-control);
+  resize: vertical;
+}
+
+.vitruvium.application input:focus,
+.vitruvium.application select:focus,
+.vitruvium.application textarea:focus {
+  border-color: var(--vit-color-focus);
+  outline: none;
+  box-shadow: 0 1px 0 0 var(--vit-color-focus);
+}
+
+.vitruvium.application input::placeholder,
+.vitruvium.application textarea::placeholder {
+  color: var(--vit-color-text-muted);
+  opacity: 0.75;
+  font-style: italic;
+}
+
+.vitruvium.application select option {
+  color: var(--vit-color-text);
+  background: var(--vit-parchment);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Кнопки                                                             */
+/* ------------------------------------------------------------------ */
+
+/*
+ * .vit-button — обычная кнопка действия: чернильный контур, без заливки.
+ * .vit-button.primary — главное действие экрана: сангина и двойная рамка,
+ * как у портрета. На экране не больше одной главной кнопки.
+ */
+.vitruvium .vit-button,
+.vitruvium.application .form-footer button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 0.4em;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0.3em 0.85em;
+  color: var(--vit-color-text);
+  font-family: var(--vit-font-text);
+  font-size: var(--vit-step-0);
+  font-weight: 400;
+  line-height: 1.2;
+  background: transparent;
+  border: var(--vit-rule-strong);
+  border-radius: var(--vit-radius-control);
+  box-shadow: none;
+  cursor: pointer;
+  transition: color var(--vit-transition), border-color var(--vit-transition), background-color var(--vit-transition);
+}
+
+.vitruvium .vit-button > i,
+.vitruvium.application .form-footer button > i {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.vitruvium .vit-button:hover,
+.vitruvium.application .form-footer button:hover {
+  color: var(--vit-color-accent);
+  background: rgb(230 214 178 / 0.55);
+  border-color: var(--vit-color-accent);
+  box-shadow: none;
+}
+
+.vitruvium .vit-button.primary,
+.vitruvium.application .form-footer button.default,
+.vitruvium.application .form-footer button[autofocus] {
+  color: var(--vit-color-accent);
+  border-color: var(--vit-color-accent);
+  outline: 1px solid var(--vit-color-accent);
+  outline-offset: 2px;
+}
+
+.vitruvium .vit-button:disabled {
+  color: var(--vit-color-text-muted);
+  border-style: dashed;
+  border-color: var(--vit-line);
+  background: transparent;
+  cursor: default;
+}
+
+/* Фокус с клавиатуры: голубая грунтовка, у всех элементов одинаковый */
+.vitruvium button:focus-visible,
+.vitruvium a:focus-visible,
+.vitruvium [tabindex]:focus-visible,
+.vitruvium.application .form-footer button:focus-visible {
+  outline: var(--vit-focus-ring);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Отметки уровня (кружки): характеристики, вдохновение               */
+/* ------------------------------------------------------------------ */
+
+.vitruvium .pips {
+  display: flex;
+  gap: 5px;
+}
+
+.vitruvium .pip {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 1.5px solid var(--vit-color-control);
+  border-radius: 50%;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color var(--vit-transition), border-color var(--vit-transition), transform var(--vit-transition);
+}
+
+.vitruvium .pip.filled {
+  background: radial-gradient(circle at 35% 35%, var(--vit-sanguine-soft), var(--vit-sanguine) 70%);
+  border-color: var(--vit-sanguine);
+}
+
+.vitruvium .pip:not(:disabled):hover {
+  border-color: var(--vit-sanguine);
+  transform: scale(1.15);
+}
+
+.vitruvium .pip:disabled {
+  cursor: default;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Грань кубика: круг, вписанный в квадрат, с отметками успехов       */
+/* ------------------------------------------------------------------ */
+
+.vitruvium .vit-face {
+  position: relative;
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: var(--vit-parchment);
+  border: 1.5px solid var(--vit-color-control);
+  border-radius: 3px;
+}
+
+/* Вписанный круг — линия построения, как на рисунке Витрувианского человека */
+.vitruvium .vit-face::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border: 1px solid var(--vit-line);
+  border-radius: 50%;
+}
+
+.vitruvium .vit-face .vit-mark {
+  position: relative;
+  width: 7px;
+  height: 7px;
+  background: var(--vit-sanguine);
+  border-radius: 50%;
+}
+
+.vitruvium .vit-face.successes-0 {
+  border-color: var(--vit-line);
+}
+
+.vitruvium .vit-face.successes-2 {
+  border-color: var(--vit-sanguine);
+}
+
+/* Стандартная подсказка броска Foundry для кубика dv */
+.dice-tooltip .roll.vitruvium-die {
+  color: var(--vit-sanguine);
+}

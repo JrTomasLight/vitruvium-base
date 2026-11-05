@@ -1,0 +1,194 @@
+/*
+ * Карточки «Витрувия» в чате: бросок и проверка, заявка, вдохновение.
+ * Карточка всегда бумажная. Двойная рамка (контур и линия внутри) —
+ * та же, что у портрета в листе.
+ */
+
+.vitruvium.chat-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vit-space-2);
+  padding: var(--vit-space-2) 0.6rem;
+  color: var(--vit-color-text);
+  font-family: var(--vit-font-text);
+  font-size: var(--vit-step-0);
+  line-height: 1.35;
+  background: var(--vit-parchment);
+  border: var(--vit-rule);
+  outline: var(--vit-rule);
+  outline-offset: -4px;
+}
+
+.vitruvium.chat-card .card-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0 var(--vit-space-2);
+  padding-bottom: var(--vit-space-1);
+  border-bottom: var(--vit-rule);
+}
+
+.vitruvium.chat-card .card-title {
+  margin: 0;
+  padding: 0;
+  font-family: var(--vit-font-text);
+  font-size: var(--vit-step-1);
+  font-weight: 700;
+  color: var(--vit-color-text);
+  border: none;
+}
+
+.vitruvium.chat-card .card-meta {
+  display: flex;
+  gap: var(--vit-space-2);
+  margin: 0;
+  font-family: var(--vit-font-caps);
+  font-size: var(--vit-step--1);
+  font-weight: 500;
+  color: var(--vit-color-text-muted);
+}
+
+.vitruvium.chat-card .card-mode {
+  color: var(--vit-color-accent);
+}
+
+.vitruvium.chat-card .card-note {
+  margin: 0;
+  font-size: var(--vit-step--1);
+  font-style: italic;
+  color: var(--vit-color-text-muted);
+}
+
+.vitruvium.chat-card .card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--vit-space-2);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Бросок и проверка                                                  */
+/* ------------------------------------------------------------------ */
+
+.vitruvium.chat-card .dice-attempts,
+.vitruvium.chat-card .dice-faces {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vitruvium.chat-card .dice-attempts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.vitruvium.chat-card .dice-attempt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vit-space-2);
+  padding: var(--vit-space-1) 0.35rem;
+  border: 1px dashed transparent;
+}
+
+/* Если бросков несколько, незасчитанные приглушены, засчитанный обведён */
+.vitruvium.chat-card .dice-attempts:has(.dice-attempt + .dice-attempt) .dice-attempt:not(.chosen) {
+  opacity: 0.5;
+}
+
+.vitruvium.chat-card .dice-attempts:has(.dice-attempt + .dice-attempt) .dice-attempt.chosen {
+  border-color: var(--vit-color-accent);
+}
+
+.vitruvium.chat-card .dice-faces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--vit-space-1);
+}
+
+.vitruvium.chat-card .attempt-total {
+  min-width: 1.5rem;
+  font-size: var(--vit-step-1);
+  font-weight: 700;
+  text-align: center;
+  color: var(--vit-color-accent);
+}
+
+.vitruvium.chat-card .card-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--vit-space-2);
+  padding: 0.3rem var(--vit-space-2);
+  border-top: var(--vit-rule);
+  background: rgb(230 214 178 / 0.6);
+}
+
+.vitruvium.chat-card .result-outcome {
+  font-family: var(--vit-font-caps);
+  font-size: var(--vit-step-1);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.vitruvium.chat-card.success .result-outcome {
+  color: var(--vit-color-success);
+}
+
+.vitruvium.chat-card.failure .result-outcome {
+  color: var(--vit-color-failure);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Заявка                                                             */
+/* ------------------------------------------------------------------ */
+
+.vitruvium.chat-card .declaration-body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--vit-space-1) var(--vit-space-3);
+  margin: 0;
+}
+
+.vitruvium.chat-card .declaration-body dt {
+  font-family: var(--vit-font-caps);
+  font-size: var(--vit-step--1);
+  font-weight: 500;
+  color: var(--vit-color-text-muted);
+}
+
+.vitruvium.chat-card .declaration-body dd {
+  margin: 0;
+  white-space: pre-line;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Вдохновение                                                        */
+/* ------------------------------------------------------------------ */
+
+.vitruvium.chat-card .inspiration-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vit-space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vitruvium.chat-card .inspiration-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--vit-space-2);
+}
+
+.vitruvium.chat-card .inspiration-value {
+  font-weight: 700;
+  color: var(--vit-color-accent);
+}
+
+.vitruvium.chat-card .inspiration-row.capped .inspiration-value {
+  font-weight: 400;
+  font-style: italic;
+  color: var(--vit-color-text-muted);
+}

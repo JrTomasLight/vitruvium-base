@@ -1,0 +1,88 @@
+/*
+ * Окно «Библиотека макросов».
+ * Записи — строки, разделённые линиями построения, без карточек и теней.
+ */
+
+.vitruvium.macro-library .window-content {
+  padding: var(--vit-space-3) var(--vit-space-4);
+}
+
+.vitruvium.macro-library .library-intro {
+  margin: 0 0 var(--vit-space-3);
+  font-style: italic;
+  color: var(--vit-color-text-muted);
+}
+
+.vitruvium.macro-library .library-group + .library-group {
+  margin-top: var(--vit-space-4);
+}
+
+.vitruvium.macro-library .library-group-title {
+  margin: 0 0 var(--vit-space-1);
+  padding: 0 0 var(--vit-space-1);
+  font-family: var(--vit-font-caps);
+  font-size: var(--vit-step-1);
+  font-weight: 500;
+  color: var(--vit-color-text);
+  border-bottom: var(--vit-rule-strong);
+}
+
+.vitruvium.macro-library .library-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vitruvium.macro-library .library-entry {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: var(--vit-space-3);
+  align-items: center;
+  padding: var(--vit-space-2) 0;
+  border-bottom: var(--vit-rule);
+}
+
+.vitruvium.macro-library .library-entry:last-child {
+  border-bottom: none;
+}
+
+.vitruvium.macro-library .library-entry[draggable="true"] {
+  cursor: grab;
+}
+
+.vitruvium.macro-library .library-icon {
+  width: 40px;
+  height: 40px;
+  border: none;
+}
+
+.vitruvium.macro-library .library-name {
+  margin: 0;
+  padding: 0;
+  font-family: var(--vit-font-text);
+  font-size: var(--vit-step-0);
+  font-weight: 700;
+  color: var(--vit-color-text);
+  border: none;
+}
+
+.vitruvium.macro-library .library-hint,
+.vitruvium.macro-library .library-pending {
+  margin: 0;
+  font-size: var(--vit-step--1);
+  color: var(--vit-color-text-muted);
+}
+
+.vitruvium.macro-library .library-pending {
+  font-style: italic;
+}
+
+.vitruvium.macro-library .library-entry.pending .library-icon {
+  opacity: 0.55;
+  filter: grayscale(0.6);
+}
+
+/* Кнопка библиотеки во вкладке «Макросы» боковой панели Foundry */
+.vitruvium-open-library {
+  flex: 0 0 100%;
+}

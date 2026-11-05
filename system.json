@@ -18,7 +18,14 @@
     "module/vitruvium.mjs"
   ],
   "styles": [
-    "styles/vitruvium.css"
+    "styles/fonts.css",
+    "styles/tokens.css",
+    "styles/components.css",
+    "styles/character-sheet.css",
+    "styles/chat.css",
+    "styles/dialogs.css",
+    "styles/macro-library.css",
+    "styles/hud.css"
   ],
   "languages": [
     {
