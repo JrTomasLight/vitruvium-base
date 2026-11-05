@@ -1,0 +1,30 @@
+# Автотесты логики бросков и вероятностей.
+#
+# Запускаются при пуше в main и features и в pull request.
+# Это только Node: сам Foundry не запускается, нужные части
+# заменены заглушками (tests/helpers/foundry.mjs).
+
+name: Tests
+
+on:
+  push:
+    branches: [main, features]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить код
+        uses: actions/checkout@v4
+
+      - name: Установить Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Запустить тесты
+        run: npm test
