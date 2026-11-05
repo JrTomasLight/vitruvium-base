@@ -7,11 +7,16 @@ import { CharacterData } from "./data/character.mjs";
 import { VitruviumActor } from "./documents/actor.mjs";
 import { VitruviumCharacterSheet } from "./sheets/character-sheet.mjs";
 import { VitruviumDie } from "./dice/vitruvium-die.mjs";
+import { rollCheck } from "./dice/check.mjs";
+import { promptCheck } from "./dice/check-dialog.mjs";
 
 Hooks.once("init", () => {
   console.log("Витрувий | Инициализация системы");
 
   CONFIG.VITRUVIUM = VITRUVIUM;
+
+  // Программный интерфейс для макросов и модулей.
+  game.vitruvium = { rollCheck, promptCheck, VitruviumDie };
 
   // Кубик «Витрувия»: формула `3dv`
   CONFIG.Dice.terms[VitruviumDie.DENOMINATION] = VitruviumDie;

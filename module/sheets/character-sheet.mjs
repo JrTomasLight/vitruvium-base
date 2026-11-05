@@ -20,6 +20,7 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
     actions: {
       editPortrait: VitruviumCharacterSheet.#onEditPortrait,
       setCharacteristic: VitruviumCharacterSheet.#onSetCharacteristic,
+      rollCharacteristic: VitruviumCharacterSheet.#onRollCharacteristic,
       setInspiration: VitruviumCharacterSheet.#onSetInspiration
     }
   };
@@ -136,6 +137,7 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
       return {
         key,
         label,
+        rollLabel: game.i18n.format("VITRUVIUM.Check.RollCharacteristic", { characteristic: label }),
         hint: game.i18n.localize(characteristic.hint),
         icon: characteristic.icon,
         value,
@@ -170,6 +172,16 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
     if ( !this.isEditable ) return;
     const { characteristic, value } = target.dataset;
     return this.document.update({ [`system.characteristics.${characteristic}.value`]: Number(value) });
+  }
+
+  /**
+   * Проверка характеристики по клику на её название или значок.
+   * Бросать может только владелец персонажа.
+   * @this {VitruviumCharacterSheet}
+   */
+  static async #onRollCharacteristic(event, target) {
+    if ( !this.document.isOwner ) return;
+    return this.document.rollCharacteristic(target.dataset.characteristic);
   }
 
   /**

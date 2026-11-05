@@ -9,9 +9,19 @@
   <ol class="characteristic-list">
     {{#each characteristics as |characteristic|}}
     <li class="characteristic" data-characteristic="{{characteristic.key}}">
-      <i class="characteristic-icon {{characteristic.icon}}" inert></i>
+      <button type="button" class="characteristic-icon" data-action="rollCharacteristic"
+              data-characteristic="{{characteristic.key}}" data-tooltip="{{characteristic.rollLabel}}"
+              aria-label="{{characteristic.rollLabel}}">
+        <i class="{{characteristic.icon}}" inert></i>
+        <i class="roll-icon fa-solid fa-dice" inert></i>
+      </button>
       <div class="characteristic-info">
-        <h3 class="characteristic-name">{{characteristic.label}}</h3>
+        <h3 class="characteristic-name">
+          <button type="button" class="characteristic-roll" data-action="rollCharacteristic"
+                  data-characteristic="{{characteristic.key}}" data-tooltip="{{characteristic.rollLabel}}">
+            {{characteristic.label}}
+          </button>
+        </h3>
         <p class="characteristic-hint">{{characteristic.hint}}</p>
       </div>
       <div class="pips" role="group" aria-label="{{characteristic.label}}">

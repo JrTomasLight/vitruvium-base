@@ -303,14 +303,77 @@
 }
 
 .vitruvium.character-sheet .characteristic-icon {
+  position: relative;
   display: grid;
   place-items: center;
   width: 2.25rem;
   height: 2.25rem;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
   font-size: 1rem;
   color: var(--vit-ink-soft);
+  background: transparent;
   border: 1px solid var(--vit-line);
   border-radius: 50%;
+  box-shadow: none;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.vitruvium.character-sheet .characteristic-icon > i {
+  margin: 0;
+  grid-area: 1 / 1;
+  transition: opacity 0.15s ease;
+}
+
+/* При наведении значок характеристики сменяется кубиком: по клику — проверка */
+.vitruvium.character-sheet .characteristic-icon .roll-icon {
+  opacity: 0;
+}
+
+.vitruvium.character-sheet .characteristic-icon:hover,
+.vitruvium.character-sheet .characteristic-icon:focus-visible {
+  color: var(--vit-sanguine);
+  border-color: var(--vit-sanguine);
+}
+
+.vitruvium.character-sheet .characteristic-icon:hover > i:not(.roll-icon),
+.vitruvium.character-sheet .characteristic-icon:focus-visible > i:not(.roll-icon) {
+  opacity: 0;
+}
+
+.vitruvium.character-sheet .characteristic-icon:hover .roll-icon,
+.vitruvium.character-sheet .characteristic-icon:focus-visible .roll-icon {
+  opacity: 1;
+}
+
+.vitruvium.character-sheet .characteristic-icon:focus-visible,
+.vitruvium.character-sheet .characteristic-roll:focus-visible {
+  outline: 2px solid var(--vit-gold);
+  outline-offset: 2px;
+}
+
+/* Название характеристики — тоже кнопка проверки, но выглядит как текст */
+.vitruvium.character-sheet .characteristic-roll {
+  display: inline;
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.vitruvium.character-sheet .characteristic-roll:hover {
+  color: var(--vit-sanguine);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
 }
 
 .vitruvium.character-sheet .characteristic-name {
@@ -349,4 +412,181 @@
 .vitruvium.character-sheet .biography prose-mirror {
   min-height: 100%;
   color: var(--vit-ink);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Грань кубика «Витрувия»: квадрат с отметками успехов               */
+/* ------------------------------------------------------------------ */
+
+.vitruvium .vit-face {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: var(--vit-parchment);
+  border: 1.5px solid var(--vit-ink-soft);
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.35);
+}
+
+.vitruvium .vit-face .vit-mark {
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle at 35% 35%, var(--vit-sanguine-soft), var(--vit-sanguine) 70%);
+  border-radius: 50%;
+}
+
+.vitruvium .vit-face.successes-0 {
+  opacity: 0.7;
+}
+
+.vitruvium .vit-face.successes-2 {
+  border-color: var(--vit-sanguine);
+}
+
+/* Стандартная подсказка броска Foundry для кубика dv */
+.dice-tooltip .roll.vitruvium-die {
+  color: var(--vit-sanguine, #a4442a);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Карточка проверки в чате                                           */
+/* ------------------------------------------------------------------ */
+
+.vitruvium.chat-card {
+  --vit-parchment: #f3e9d2;
+  --vit-parchment-deep: #e6d6b2;
+  --vit-ink: #3b2a1a;
+  --vit-ink-soft: #6b5640;
+  --vit-sanguine: #a4442a;
+  --vit-sanguine-soft: #c97b5d;
+  --vit-line: #b9a37c;
+  --vit-gold: #b08d3c;
+  --vit-font-serif: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.5rem 0.6rem;
+  color: var(--vit-ink);
+  font-family: var(--vit-font-serif);
+  background: var(--vit-parchment);
+  border: 1px solid var(--vit-line);
+  outline: 1px solid var(--vit-line);
+  outline-offset: -4px;
+}
+
+.vitruvium.chat-card .check-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--vit-line);
+}
+
+.vitruvium.chat-card .check-label {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.vitruvium.chat-card .check-meta {
+  font-size: 0.8rem;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+  color: var(--vit-ink-soft);
+}
+
+.vitruvium.chat-card .check-attempts,
+.vitruvium.chat-card .check-dice {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vitruvium.chat-card .check-attempts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.vitruvium.chat-card .check-attempt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.25rem 0.35rem;
+  border: 1px dashed transparent;
+}
+
+/* Если бросков несколько, незасчитанные приглушены, засчитанный обведён */
+.vitruvium.chat-card .check-attempts:has(.check-attempt + .check-attempt) .check-attempt:not(.chosen) {
+  opacity: 0.5;
+}
+
+.vitruvium.chat-card .check-attempts:has(.check-attempt + .check-attempt) .check-attempt.chosen {
+  border-color: var(--vit-sanguine);
+}
+
+.vitruvium.chat-card .check-dice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.vitruvium.chat-card .attempt-total {
+  min-width: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  color: var(--vit-sanguine);
+}
+
+.vitruvium.chat-card .check-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0.3rem 0.5rem;
+  border-top: 1px solid var(--vit-line);
+  background: rgb(230 214 178 / 0.6);
+}
+
+.vitruvium.chat-card .check-outcome {
+  font-size: 1.15rem;
+  font-weight: bold;
+  font-variant: small-caps;
+  letter-spacing: 0.08em;
+}
+
+.vitruvium.chat-card.success .check-outcome {
+  color: #3f5f2a;
+}
+
+.vitruvium.chat-card.failure .check-outcome {
+  color: var(--vit-sanguine);
+}
+
+.vitruvium.chat-card .check-note {
+  margin: 0;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--vit-ink-soft);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Окно проверки                                                      */
+/* ------------------------------------------------------------------ */
+
+.vitruvium.check-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.vitruvium.check-dialog .hint {
+  flex: 0 0 100%;
+  margin: 0.15rem 0 0;
 }

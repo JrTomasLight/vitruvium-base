@@ -1,0 +1,39 @@
+<div class="vitruvium check-dialog">
+  <div class="form-group">
+    <label for="{{id}}-characteristic">{{localize "VITRUVIUM.Check.Characteristic"}}</label>
+    <div class="form-fields">
+      <select id="{{id}}-characteristic" name="characteristic">
+        {{selectOptions characteristicOptions selected=characteristic}}
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="{{id}}-difficulty">{{localize "VITRUVIUM.Check.Difficulty"}}</label>
+    <div class="form-fields">
+      <select id="{{id}}-difficulty" name="difficulty">
+        {{selectOptions difficultyOptions selected=difficulty}}
+      </select>
+    </div>
+    <p class="hint">{{localize "VITRUVIUM.Check.DifficultyHint"}}</p>
+  </div>
+
+  <div class="form-group">
+    <label for="{{id}}-advantages">{{localize "VITRUVIUM.Check.Advantages"}}</label>
+    <div class="form-fields">
+      <select id="{{id}}-advantages" name="advantages">
+        {{selectOptions countOptions selected="0"}}
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="{{id}}-disadvantages">{{localize "VITRUVIUM.Check.Disadvantages"}}</label>
+    <div class="form-fields">
+      <select id="{{id}}-disadvantages" name="disadvantages">
+        {{selectOptions countOptions selected="0"}}
+      </select>
+    </div>
+    <p class="hint">{{localize "VITRUVIUM.Check.AdvantageHint"}}</p>
+  </div>
+</div>
