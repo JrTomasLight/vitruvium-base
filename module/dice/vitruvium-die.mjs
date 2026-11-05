@@ -1,4 +1,5 @@
 import { VITRUVIUM } from "../config.mjs";
+import { successesOnFace } from "./rules.mjs";
 
 /**
  * Кубик «Витрувия»: особый шестигранник.
@@ -25,7 +26,7 @@ export class VitruviumDie extends foundry.dice.terms.Die {
    * @returns {number}
    */
   static successesOn(face) {
-    return VITRUVIUM.dice.faces[face - 1] ?? 0;
+    return successesOnFace(face);
   }
 
   /**

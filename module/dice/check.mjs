@@ -1,5 +1,10 @@
-import { VITRUVIUM } from "../config.mjs";
 import { VitruviumDie } from "./vitruvium-die.mjs";
+import {
+  attemptCount, chooseAttempt, clampDifficulty, clampPool, isSuccess, netAdvantage, successesOnFace
+} from "./rules.mjs";
+
+// Чистые правила доступны и отсюда, чтобы не менять существующий импорт.
+export { clampPool, netAdvantage };
 
 const CHAT_TEMPLATE = "systems/vitruvium/templates/chat/check-card.hbs";
 
@@ -25,31 +30,6 @@ const CHAT_TEMPLATE = "systems/vitruvium/templates/chat/check-card.hbs";
  */
 
 /**
- * Итог преимуществ и помех.
- * Каждое преимущество гасит одну помеху. Остаток — от −2 (две помехи)
- * до +2 (два преимущества).
- * @param {number} advantages
- * @param {number} disadvantages
- * @returns {number}
- */
-export function netAdvantage(advantages = 0, disadvantages = 0) {
-  const max = VITRUVIUM.maxAdvantages;
-  const adv = Math.clamp(Number(advantages) || 0, 0, max);
-  const dis = Math.clamp(Number(disadvantages) || 0, 0, max);
-  return adv - dis;
-}
-
-/**
- * Размер пула с учётом ограничений правил: от 1 до 6 кубиков.
- * @param {number} dice
- * @returns {number}
- */
-export function clampPool(dice) {
-  const { minPool, maxPool } = VITRUVIUM.dice;
-  return Math.clamp(Math.floor(Number(dice) || 0), minPool, maxPool);
-}
-
-/**
  * Провести проверку и отправить карточку в чат.
  *
  * Правила (Beta 3.1, «Проверка характеристики»):
@@ -71,31 +51,21 @@ export async function rollCheck({
     ui.notifications.info(game.i18n.format("VITRUVIUM.Check.PoolCapped", { requested, max: pool }));
   }
 
-  const { min, max } = VITRUVIUM.difficulty;
-  difficulty = Math.clamp(Math.floor(Number(difficulty) || min), min, max);
+  difficulty = clampDifficulty(difficulty);
 
   const net = netAdvantage(advantages, disadvantages);
-  const attempts = 1 + Math.abs(net);
   const formula = `${pool}d${VitruviumDie.DENOMINATION}`;
 
   const rolls = [];
-  for ( let i = 0; i < attempts; i++ ) {
+  for ( let i = 0; i < attemptCount(net); i++ ) {
     const roll = new Roll(formula);
     await roll.evaluate();
     rolls.push(roll);
   }
 
-  // Преимущество — засчитываем лучший бросок, помеха — худший.
-  // При равенстве засчитывается более ранний бросок.
-  let chosenIndex = 0;
-  rolls.forEach((roll, index) => {
-    const better = roll.total > rolls[chosenIndex].total;
-    const worse = roll.total < rolls[chosenIndex].total;
-    if ( ((net > 0) && better) || ((net < 0) && worse) ) chosenIndex = index;
-  });
-
+  const chosenIndex = chooseAttempt(rolls.map(roll => roll.total), net);
   const successes = rolls[chosenIndex].total;
-  const success = successes >= difficulty;
+  const success = isSuccess(successes, difficulty);
 
   const result = { rolls, chosenIndex, successes, difficulty, success };
   result.message = await createCheckMessage({ actor, label, pool, net, rollMode, ...result });
@@ -111,7 +81,7 @@ async function createCheckMessage({ actor, label, pool, net, rollMode, rolls, ch
     chosen: index === chosenIndex,
     successes: roll.total,
     dice: roll.dice.flatMap(term => term.results.map(result => {
-      const faceSuccesses = VitruviumDie.successesOn(result.result);
+      const faceSuccesses = successesOnFace(result.result);
       return {
         successes: faceSuccesses,
         marks: Array(faceSuccesses).fill(null),
