@@ -1,0 +1,13 @@
+{
+  "name": "vitruvium",
+  "private": true,
+  "description": "Служебный файл для автотестов системы «Витрувий». В сборку системы для Foundry не входит.",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "odds": "node scripts/odds.mjs"
+  }
+}
