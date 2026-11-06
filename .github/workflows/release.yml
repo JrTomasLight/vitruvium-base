@@ -4,10 +4,10 @@
 #   git tag v0.1.0 && git push origin v0.1.0
 #
 # Что делает:
-# 1. Берёт версию из тега и прописывает её в system.json,
-#    вместе со ссылкой download на архив именно этого релиза.
-# 2. Собирает vitruvium.zip только из файлов, нужных Foundry.
-# 3. Создаёт релиз на GitHub и прикладывает к нему vitruvium.zip и system.json.
+# 1. Собирает vitruvium.zip скриптом scripts/package.mjs: только файлы,
+#    нужные Foundry, а в system.json — версия из тега и ссылка download
+#    на архив именно этого релиза.
+# 2. Создаёт релиз на GitHub и прикладывает к нему vitruvium.zip и system.json.
 #
 # Foundry проверяет обновления по ссылке manifest из system.json:
 # releases/latest/download/system.json, то есть по последнему релизу.
@@ -29,16 +29,15 @@ jobs:
       - name: Получить код
         uses: actions/checkout@v4
 
-      - name: Прописать версию и ссылку на архив в system.json
-        run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          DOWNLOAD="https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/vitruvium.zip"
-          jq --arg version "$VERSION" --arg download "$DOWNLOAD" \
-            '.version = $version | .download = $download' system.json > system.json.tmp
-          mv system.json.tmp system.json
+      - name: Установить Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Собрать архив системы
-        run: zip -r vitruvium.zip system.json module lang styles templates fonts assets journals README.md CHANGELOG.md
+        # Версия берётся из тега и прописывается в system.json вместе со ссылкой
+        # на архив этого релиза. Список файлов архива — в scripts/package.mjs.
+        run: node scripts/package.mjs --version "$GITHUB_REF_NAME" --out .
 
       - name: Создать релиз
         env:

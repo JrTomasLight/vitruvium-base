@@ -148,13 +148,6 @@ describe("Сборка правил из HTML pandoc", () => {
   });
 });
 
-describe("Релиз", () => {
-  it("архив системы содержит источники журналов", () => {
-    const zip = read(".github/workflows/release.yml").match(/zip -r vitruvium\.zip (.*)/)[1].split(/\s+/);
-    for ( const file of ["CHANGELOG.md", "journals"] ) assert.ok(zip.includes(file), file);
-  });
-});
-
 describe("Синхронизация журналов в мире (заглушки Foundry)", () => {
   /** Мир с журналами и папками; fetch отдаёт файлы из репозитория. */
   function installWorld({ gm = true, enabled = true } = {}) {

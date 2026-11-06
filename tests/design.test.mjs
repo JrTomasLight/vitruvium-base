@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { ROOT } from "./helpers/foundry.mjs";
+import { PACKAGE_FILES } from "../scripts/package.mjs";
 
 const tokensCss = fs.readFileSync(path.join(ROOT, "styles/tokens.css"), "utf8");
 
@@ -74,8 +75,7 @@ describe("Файлы дизайна на месте", () => {
   });
 
   it("релиз включает шрифты и иконки", () => {
-    const workflow = fs.readFileSync(path.join(ROOT, ".github/workflows/release.yml"), "utf8");
-    assert.match(workflow, /zip -r vitruvium\.zip[^\n]*\bfonts\b/);
-    assert.match(workflow, /zip -r vitruvium\.zip[^\n]*\bassets\b/);
+    assert.ok(PACKAGE_FILES.includes("fonts"));
+    assert.ok(PACKAGE_FILES.includes("assets"));
   });
 });

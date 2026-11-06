@@ -1,8 +1,12 @@
-# Автотесты логики бросков и вероятностей.
+# Проверки системы на GitHub. Сам Foundry здесь не запускается.
 #
 # Запускаются при пуше в main и features и в pull request.
-# Это только Node: сам Foundry не запускается, нужные части
-# заменены заглушками (tests/helpers/foundry.mjs).
+#
+# - test: автотесты (`npm test`), нужные части Foundry заменены заглушками
+#   (tests/helpers/foundry.mjs). Без зависимостей.
+# - package: собирает vitruvium.zip тем же скриптом, что и релиз
+#   (scripts/package.mjs), и прикладывает к запуску. Архив можно скачать
+#   внизу страницы запуска, в «Artifacts», и поставить в Foundry вручную.
 
 name: Tests
 
@@ -28,3 +32,25 @@ jobs:
 
       - name: Запустить тесты
         run: npm test
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить код
+        uses: actions/checkout@v4
+
+      - name: Установить Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Собрать архив системы
+        run: node scripts/package.mjs --out build
+
+      - name: Приложить архив к запуску
+        uses: actions/upload-artifact@v4
+        with:
+          name: vitruvium-${{ github.sha }}
+          path: build/
+          retention-days: 30
+          if-no-files-found: error
