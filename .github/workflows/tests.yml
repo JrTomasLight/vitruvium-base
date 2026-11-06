@@ -10,6 +10,8 @@
 #   (`npm run preview`), скриншоты в тёмной и светлой теме и проверка доступности
 #   axe-core. Скриншоты — в «Artifacts» запуска. Падает при нарушениях уровня
 #   serious и critical.
+# - changelog: предупреждение (не ошибка), если в пуше или PR поменялся код
+#   системы, а CHANGELOG.md — нет.
 # - package: собирает vitruvium.zip тем же скриптом, что и релиз
 #   (scripts/package.mjs), и прикладывает к запуску. Архив можно скачать
 #   внизу страницы запуска, в «Artifacts», и поставить в Foundry вручную.
@@ -120,3 +122,31 @@ jobs:
           path: build/
           retention-days: 30
           if-no-files-found: error
+
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить код с историей
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Проверить, записаны ли изменения в CHANGELOG.md
+        env:
+          BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [ -z "$BASE" ] || [ "$BASE" = "0000000000000000000000000000000000000000" ] \
+            || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then
+            echo "Не с чем сравнить (новая ветка или переписанная история)."
+            exit 0
+          fi
+          CHANGED="$(git diff --name-only "$BASE" "$HEAD")"
+          CODE="$(echo "$CHANGED" | grep -E '^(module|templates|styles|lang|assets|fonts|journals)/|^system\.json$' || true)"
+          if [ -n "$CODE" ] && ! echo "$CHANGED" | grep -qx 'CHANGELOG.md'; then
+            echo "::warning title=CHANGELOG.md::Код системы изменился, а CHANGELOG.md нет. Запишите изменение со знаком 🔧, ✅ или 📄."
+            echo "Изменённые файлы системы:"
+            echo "$CODE"
+          else
+            echo "В порядке."
+          fi

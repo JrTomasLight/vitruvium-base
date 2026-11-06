@@ -1,0 +1,28 @@
+# Dependabot: раз в неделю проверяет новые версии actions в workflow и пакетов
+# для разработки (ESLint, Handlebars, Playwright, axe-core) и открывает PR в features.
+# В саму систему для Foundry эти пакеты не попадают.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: features
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "Обновить actions"
+
+  - package-ecosystem: npm
+    directory: /
+    target-branch: features
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      dev-packages:
+        patterns: ["*"]
+    commit-message:
+      prefix: "Обновить пакеты для разработки"
