@@ -4,7 +4,9 @@
  *
  *   npm run preview                 — превью и скриншоты во временную папку
  *   npm run preview -- --out папка  — в указанную папку
- *   npm run preview -- --no-shots   — только страница index.html, без браузера
+ *   npm run preview -- --no-shots   — только страницы, без браузера
+ *   npm run preview -- --portrait путь/к/картинке.jpg — портрет для примера персонажа
+ *     (картинку в репозиторий не кладём: у неё свой автор)
  *
  * Нужны пакеты (npm ci) и Chromium для Playwright (npx playwright install chromium).
  *
@@ -22,6 +24,8 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import Handlebars from "handlebars";
 import { FakeActor, installFoundry, LANG } from "../tests/helpers/foundry.mjs";
+import { abilityLimit, domainBudget } from "../module/data/creation.mjs";
+import { SAMPLE_CHARACTER } from "../module/world/sample-character.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "system.json"), "utf8"));
@@ -29,10 +33,10 @@ const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, "system.json"), "utf
 /** Font Awesome для значков: в Foundry он встроен, здесь подключается с CDN. */
 const FONT_AWESOME = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css";
 
-/** Портрет-заглушка: силуэт в тонах бумаги. */
+/** Портрет-заглушка 3:4: силуэт в тонах лака и бронзы. */
 const PORTRAIT = `data:image/svg+xml,${encodeURIComponent(
-  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='#e6d6b2'/>"
-  + "<circle cx='50' cy='38' r='17' fill='#b9a37c'/><path d='M18 96c3-22 17-33 32-33s29 11 32 33z' fill='#b9a37c'/></svg>"
+  "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 200'><rect width='150' height='200' fill='#3a2c22'/>"
+  + "<circle cx='75' cy='78' r='30' fill='#7a604c'/><path d='M18 200c5-48 30-70 57-70s52 22 57 70z' fill='#7a604c'/></svg>"
 )}`;
 
 function option(name) {
@@ -106,24 +110,39 @@ async function collectSamples() {
   }
   foundry.applications.api.ApplicationV2 = ApplicationV2;
   foundry.applications.api.HandlebarsApplicationMixin = Base => Base;
-  foundry.applications.sheets = { ActorSheetV2: ApplicationV2 };
+  foundry.applications.sheets = { ActorSheetV2: ApplicationV2, ItemSheetV2: ApplicationV2 };
   foundry.applications.ux.TextEditor = { implementation: { enrichHTML: async html => html } };
 
   const samples = [];
-  const actor = sampleActor();
+  const portrait = option("portrait");
+  const actor = sampleActor(portrait ? pathToFileURL(path.resolve(portrait)).href : undefined);
 
-  // Лист персонажа: шапка, вкладки и вкладка «Характеристики».
+  // Лист персонажа: шапка, вкладки, по одному листу на вкладку «Характеристики» и «Способности».
   const { VitruviumCharacterSheet } = await import("../module/sheets/character-sheet.mjs");
-  const sheet = new VitruviumCharacterSheet({ document: actor });
-  const context = await sheet._prepareContext({});
-  const parts = [];
-  for ( const [partId, part] of Object.entries(VitruviumCharacterSheet.PARTS) ) {
-    const partContext = await sheet._preparePartContext(partId, { ...context }, {});
-    parts.push(render(part.template, partContext));
+  const { width } = VitruviumCharacterSheet.DEFAULT_OPTIONS.position;
+  for ( const tab of ["characteristics", "abilities"] ) {
+    const sheet = new VitruviumCharacterSheet({ document: actor });
+    sheet.tabGroups.primary = tab;
+    const context = await sheet._prepareContext({});
+    const parts = [];
+    for ( const [partId, part] of Object.entries(VitruviumCharacterSheet.PARTS) ) {
+      const partContext = await sheet._preparePartContext(partId, { ...context }, {});
+      parts.push(render(part.template, partContext));
+    }
+    samples.push(windowSample({
+      id: `sheet-${tab}`, title: actor.name, icon: "fa-solid fa-user",
+      classes: VitruviumCharacterSheet.DEFAULT_OPTIONS.classes, width, html: parts.join("\n"), kind: "sheet"
+    }));
   }
+
+  // Лист домена.
+  const { VitruviumDomainSheet } = await import("../module/sheets/domain-sheet.mjs");
+  const domain = actor.itemTypes.domain[0];
+  const domainSheet = new VitruviumDomainSheet({ document: domain });
   samples.push(windowSample({
-    id: "sheet", title: actor.name, icon: "fa-solid fa-user",
-    classes: VitruviumCharacterSheet.DEFAULT_OPTIONS.classes, width: 640, html: parts.join("\n"), kind: "sheet"
+    id: "domain-sheet", title: domain.name, icon: "fa-solid fa-wand-sparkles",
+    classes: VitruviumDomainSheet.DEFAULT_OPTIONS.classes, width: VitruviumDomainSheet.DEFAULT_OPTIONS.position.width,
+    html: render(VitruviumDomainSheet.PARTS.form.template, await domainSheet._prepareContext({})), kind: "sheet"
   }));
 
   // Библиотека макросов: окно мастера, видны обе группы.
@@ -158,7 +177,7 @@ async function collectSamples() {
   const lastCard = () => env.messages.at(-1).content;
 
   env.queueFaces([6, 4, 2, 5, 4, 1]);
-  await rollCheck({ actor, label: "Воля", dice: 3, difficulty: 3, advantages: 1 });
+  await rollCheck({ actor, label: "Движение", dice: 3, difficulty: 3, advantages: 1 });
   chat.push({ id: "card-check-success", title: "Проверка с преимуществом: успех", html: lastCard() });
 
   env.queueFaces([1, 2, 4]);
@@ -168,6 +187,9 @@ async function collectSamples() {
   env.queueFaces([6, 5, 1, 4]);
   await rollDice({ actor, label: "Бросок кубиков", dice: 4 });
   chat.push({ id: "card-dice", title: "Свободный бросок", html: lastCard() });
+
+  await actions.shareAbility({ actor, domain, abilityIndex: 0 });
+  chat.push({ id: "card-ability", title: "Способность", html: lastCard() });
 
   await actions.declare({ actor, action: "Перелезаю через стену монастыря", goal: "Попасть во двор незамеченным" });
   chat.push({ id: "card-declaration", title: "Заявка", html: lastCard() });
@@ -183,23 +205,37 @@ async function collectSamples() {
   return samples;
 }
 
-/** Персонаж для превью: характеристики разных уровней, часть вдохновения. */
-function sampleActor() {
-  const { characteristics, tiers } = CONFIG.VITRUVIUM;
-  const levels = [2, 1, 3, 2, 1, 2];
-  const system = {
-    concept: "Капитан «Эльскаринны», упрямый и честный",
-    tier: Object.keys(tiers)[1],
-    inspiration: { value: 2, max: 6 },
-    characteristics: Object.fromEntries(Object.keys(characteristics).map((key, i) => [key, { value: levels[i] }])),
-    biography: "<p>Тридцать лет водит торговые суда по северным морям.</p>",
-    schema: { fields: { biography: {} } }
+/**
+ * Персонаж для превью — пример из системы (Георг Лиззул) с доменами.
+ * Вычисляемые поля (бюджеты, лимит способностей) считаются теми же функциями, что в моделях данных.
+ */
+function sampleActor(portrait) {
+  const data = structuredClone(SAMPLE_CHARACTER);
+  const { characteristics, tiers, characteristicRange } = CONFIG.VITRUVIUM;
+  const system = { ...data.system, schema: { fields: { biography: {} } } };
+  for ( const key of Object.keys(characteristics) ) system.characteristics[key] ??= { value: characteristicRange.min };
+  const budget = tiers[system.tier].budget;
+  const spent = Object.values(system.characteristics).reduce((sum, c) => sum + (c.value - characteristicRange.min), 0);
+
+  const domains = data.items.filter(i => i.type === "domain").map((item, index) => ({
+    id: `domain${index}`,
+    name: item.name,
+    img: iconURL("systems/vitruvium/assets/icons/ability.svg"),
+    sort: index,
+    type: "domain",
+    system: { ...item.system, abilityLimit: abilityLimit(item.system.level) }
+  }));
+  system.creation = {
+    characteristics: { budget, spent, remaining: budget - spent, overspent: spent > budget },
+    domains: domainBudget(domains.map(d => d.system.level), budget)
   };
-  const spent = levels.reduce((sum, level) => sum + (level - 1), 0);
-  const budget = Object.values(tiers)[1].budget;
-  system.creation = { characteristics: { budget, spent, remaining: budget - spent, overspent: spent > budget } };
-  const actor = new FakeActor({ name: "Отто Хорн", system });
-  actor.img = PORTRAIT;
+
+  const actor = new FakeActor({ name: data.name, system });
+  actor.img = portrait ?? PORTRAIT;
+  actor.id = "georg";
+  actor.itemTypes = { domain: domains };
+  actor.items = new Map(domains.map(d => [d.id, d]));
+  for ( const domain of domains ) domain.actor = actor;
   return actor;
 }
 
@@ -242,7 +278,7 @@ function dialogSample(id, config) {
 function page(samples, theme) {
   const styles = manifest.styles.map(file => `<link rel="stylesheet" href="${pathToFileURL(path.join(ROOT, file)).href}">`).join("\n");
   const groups = [
-    ["sheet", "Лист персонажа"], ["dialog", "Окна"], ["app", "Библиотека макросов"], ["chat", "Карточки чата"]
+    ["sheet", "Лист персонажа и лист домена"], ["dialog", "Окна"], ["app", "Библиотека макросов"], ["chat", "Карточки чата"]
   ];
   const sections = groups.map(([kind, heading]) => {
     const items = samples.filter(s => s.kind === kind).map(s => `<figure class="sample" id="${s.id}" data-title="${s.title}">
@@ -299,10 +335,11 @@ async function shoot(out, samples) {
       await pageObj.goto(pathToFileURL(path.join(out, `${theme}.html`)).href, { waitUntil: "load" });
       await pageObj.evaluate(() => document.fonts.ready);
       await pageObj.screenshot({ path: path.join(out, `${theme}.png`), fullPage: true });
+      for ( const sample of samples ) {
+        const suffix = theme === "dark" ? "" : `-${theme}`;
+        await pageObj.locator(`#${sample.id}`).screenshot({ path: path.join(out, `${sample.id}${suffix}.png`) });
+      }
       if ( theme === "dark" ) {
-        for ( const sample of samples ) {
-          await pageObj.locator(`#${sample.id}`).screenshot({ path: path.join(out, `${sample.id}.png`) });
-        }
         await pageObj.addScriptTag({ content: axeSource });
         const results = await pageObj.evaluate(async () => {
           const res = await globalThis.axe.run(".sample", { resultTypes: ["violations"] });

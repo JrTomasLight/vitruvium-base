@@ -20,6 +20,7 @@ import { MacroLibrary, addLibraryButton, openMacroLibrary } from "./apps/macro-l
 import { MACRO_LIBRARY, addToHotbar, onHotbarDrop } from "./macros/library.mjs";
 import { registerDiceSoNice } from "./integrations/dice-so-nice.mjs";
 import { registerJournalSettings, syncSystemJournals } from "./journals/sync.mjs";
+import { createSampleCharacter, ensureSampleCharacter, registerSampleCharacterSetting } from "./world/sample-character.mjs";
 
 Hooks.once("init", () => {
   console.log("Витрувий | Инициализация системы");
@@ -33,6 +34,7 @@ Hooks.once("init", () => {
     promptCheck,
     openMacroLibrary,
     macros: { library: MACRO_LIBRARY, addToHotbar },
+    createSampleCharacter,
     VitruviumDie,
     MacroLibrary
   };
@@ -64,6 +66,7 @@ Hooks.once("init", () => {
 
   // Настройки
   registerJournalSettings();
+  registerSampleCharacterSetting();
 
   // Необязательные модули
   registerDiceSoNice();
@@ -81,3 +84,6 @@ Hooks.on("hotbarDrop", onHotbarDrop);
 
 // Журналы системы: «Изменения системы» и «Правила Beta 3.1»
 Hooks.once("ready", syncSystemJournals);
+
+// Пример персонажа (рыцарь Георг Лиззул) — один раз в каждом мире
+Hooks.once("ready", ensureSampleCharacter);
