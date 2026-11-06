@@ -1,4 +1,5 @@
-Copyright 2011 The Alegreya Project Authors (https://github.com/huertatipografica/Alegreya) Alegreya-Italic[wght].ttf: Copyright 2011 The Alegreya Project Authors (https://github.com/huertatipografica/Alegreya)
+Forum: Copyright (c) 2011, Denis Masharov <denis.masharov@gmail.com>.
+Literata: Copyright 2017 The Literata Project Authors (https://github.com/googlefonts/literata).
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

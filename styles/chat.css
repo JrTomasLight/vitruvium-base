@@ -1,22 +1,22 @@
 /*
- * Карточки «Витрувия» в чате: бросок и проверка, заявка, вдохновение.
- * Карточка всегда бумажная. Двойная рамка (контур и линия внутри) —
- * та же, что у портрета в листе.
+ * Карточки «Витрувия» в чате: бросок и проверка, способность, заявка, вдохновение.
+ * Шапка карточки — тёмная полоса, как шапка листа; основа — в цвете темы.
+ * Скруглённые углы, тонкий золотой контур.
  */
 
 .vitruvium.chat-card {
   display: flex;
   flex-direction: column;
   gap: var(--vit-space-2);
-  padding: var(--vit-space-2) 0.6rem;
+  padding: 0 0.6rem var(--vit-space-2);
+  overflow: hidden;
   color: var(--vit-color-text);
   font-family: var(--vit-font-text);
   font-size: var(--vit-step-0);
-  line-height: 1.35;
-  background: var(--vit-parchment);
-  border: var(--vit-rule);
-  outline: var(--vit-rule);
-  outline-offset: -4px;
+  line-height: 1.4;
+  background: var(--vit-color-bg);
+  border: 1px solid var(--vit-color-control);
+  border-radius: var(--vit-radius-card);
 }
 
 .vitruvium.chat-card .card-header {
@@ -25,17 +25,21 @@
   justify-content: space-between;
   align-items: baseline;
   gap: 0 var(--vit-space-2);
-  padding-bottom: var(--vit-space-1);
-  border-bottom: var(--vit-rule);
+  margin: 0 -0.6rem;
+  padding: var(--vit-space-2) 0.6rem;
+  color: var(--vit-band-text);
+  background: linear-gradient(180deg, var(--vit-band-from), var(--vit-band-to));
+  border-bottom: 1px solid var(--vit-band-line);
 }
 
 .vitruvium.chat-card .card-title {
   margin: 0;
   padding: 0;
-  font-family: var(--vit-font-text);
-  font-size: var(--vit-step-1);
-  font-weight: 700;
-  color: var(--vit-color-text);
+  font-family: var(--vit-font-display);
+  font-size: var(--vit-step-2);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--vit-band-text);
   border: none;
 }
 
@@ -43,14 +47,17 @@
   display: flex;
   gap: var(--vit-space-2);
   margin: 0;
-  font-family: var(--vit-font-caps);
   font-size: var(--vit-step--1);
-  font-weight: 500;
-  color: var(--vit-color-text-muted);
+  color: var(--vit-band-muted);
 }
 
 .vitruvium.chat-card .card-mode {
-  color: var(--vit-color-accent);
+  color: var(--vit-color-accent-fill);
+}
+
+.vitruvium.chat-card .card-text {
+  margin-block: 0;
+  white-space: pre-line;
 }
 
 .vitruvium.chat-card .card-note {
@@ -90,6 +97,7 @@
   gap: var(--vit-space-2);
   padding: var(--vit-space-1) 0.35rem;
   border: 1px dashed transparent;
+  border-radius: var(--vit-radius-control);
 }
 
 /* Если бросков несколько, незасчитанные приглушены, засчитанный обведён */
@@ -109,8 +117,8 @@
 
 .vitruvium.chat-card .attempt-total {
   min-width: 1.5rem;
-  font-size: var(--vit-step-1);
-  font-weight: 700;
+  font-family: var(--vit-font-display);
+  font-size: var(--vit-step-2);
   text-align: center;
   color: var(--vit-color-accent);
 }
@@ -120,16 +128,15 @@
   justify-content: space-between;
   align-items: baseline;
   gap: var(--vit-space-2);
-  padding: 0.3rem var(--vit-space-2);
-  border-top: var(--vit-rule);
-  background: rgb(230 214 178 / 0.6);
+  padding: 0.3rem var(--vit-space-3);
+  background: var(--vit-color-bg-raised);
+  border-radius: var(--vit-radius-control);
 }
 
 .vitruvium.chat-card .result-outcome {
-  font-family: var(--vit-font-caps);
-  font-size: var(--vit-step-1);
-  font-weight: 500;
-  letter-spacing: 0.03em;
+  font-family: var(--vit-font-display);
+  font-size: var(--vit-step-2);
+  letter-spacing: 0.04em;
 }
 
 .vitruvium.chat-card.success .result-outcome {
@@ -152,10 +159,10 @@
 }
 
 .vitruvium.chat-card .declaration-body dt {
-  font-family: var(--vit-font-caps);
-  font-size: var(--vit-step--1);
-  font-weight: 500;
-  color: var(--vit-color-text-muted);
+  font-family: var(--vit-font-display);
+  font-size: var(--vit-step-0);
+  letter-spacing: 0.03em;
+  color: var(--vit-color-accent);
 }
 
 .vitruvium.chat-card .declaration-body dd {
@@ -183,7 +190,7 @@
 }
 
 .vitruvium.chat-card .inspiration-value {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--vit-color-accent);
 }
 

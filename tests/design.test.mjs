@@ -12,11 +12,20 @@ import { PACKAGE_FILES } from "../scripts/package.mjs";
 
 const tokensCss = fs.readFileSync(path.join(ROOT, "styles/tokens.css"), "utf8");
 
-/** Значение токена-цвета из tokens.css. */
-function token(name) {
-  const match = new RegExp(`--vit-${name}:\\s*(#[0-9a-f]{6})`, "i").exec(tokensCss);
-  assert.ok(match, `нет токена --vit-${name}`);
-  return match[1];
+/**
+ * Токены одной темы: блок `:root, .theme-dark { ... }` или `.theme-light { ... }`.
+ * @param {string} selector  Начало селектора блока.
+ * @returns {(name: string) => string}  Значение цвета по имени без префикса --vit-.
+ */
+function theme(selector) {
+  const start = tokensCss.indexOf(`${selector} {`);
+  assert.ok(start >= 0, `нет блока темы ${selector}`);
+  const block = tokensCss.slice(start, tokensCss.indexOf("}", start));
+  return name => {
+    const match = new RegExp(`--vit-${name}:\\s*(#[0-9a-f]{6})`, "i").exec(block);
+    assert.ok(match, `${selector}: нет токена --vit-${name}`);
+    return match[1];
+  };
 }
 
 /** Относительная яркость и контраст по WCAG 2.x. */
@@ -31,26 +40,36 @@ function contrast(a, b) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-describe("Контраст палитры (WCAG)", () => {
-  const papers = ["parchment", "parchment-deep"];
+const THEMES = { "тёмная": theme(":root,\n.theme-dark"), "светлая": theme(".theme-light") };
 
-  // Цвета, которыми пишут текст: не меньше 4.5:1 на обоих тонах бумаги.
-  for ( const ink of ["ink", "ink-soft", "sanguine", "terre-verte", "azure"] ) {
-    for ( const paper of papers ) {
-      it(`текст ${ink} на ${paper} ≥ 4.5:1`, () => {
-        const ratio = contrast(token(ink), token(paper));
-        assert.ok(ratio >= 4.5, `${ratio.toFixed(2)}:1`);
-      });
+describe("Контраст палитры (WCAG), обе темы", () => {
+  for ( const [label, token] of Object.entries(THEMES) ) {
+    const check = (fg, bg, min) => it(`${label}: ${fg} на ${bg} ≥ ${min}:1`, () => {
+      const ratio = contrast(token(fg), token(bg));
+      assert.ok(ratio >= min, `${ratio.toFixed(2)}:1`);
+    });
+
+    // Текст на основе и на подложках: не меньше 4.5:1.
+    for ( const fg of ["color-text", "color-text-muted", "color-accent", "color-success", "color-failure"] ) {
+      for ( const bg of ["color-bg", "color-bg-raised"] ) check(fg, bg, 4.5);
     }
+    // Контуры кнопок и полей, набранные отметки, фокус: не меньше 3:1.
+    for ( const fg of ["color-control", "color-mark", "color-focus"] ) check(fg, "color-bg", 3);
+    // Текст на золотой кнопке.
+    check("color-on-accent", "color-accent-fill", 4.5);
+    // Шапка листа и карточек: текст и подписи, звёзды и их контуры.
+    for ( const bg of ["band-from", "band-to"] ) {
+      check("band-text", bg, 4.5);
+      check("band-muted", bg, 4.5);
+      check("color-accent-fill", bg, 3);
+      check("band-line", bg, 3);
+    }
+    // Значок в кружке.
+    check("chip-icon", "chip-bg", 3);
   }
 
-  // Фокус и контуры элементов управления: не меньше 3:1.
-  for ( const paper of papers ) {
-    it(`фокус (azure) на ${paper} ≥ 3:1`, () => assert.ok(contrast(token("azure"), token(paper)) >= 3));
-  }
-
-  it("сангина отличается от «глиняного» оранжевого: заметно темнее", () => {
-    assert.ok(luminance(token("sanguine")) < luminance("#d97757") / 2);
+  it("нет чисто чёрного и чисто белого", () => {
+    assert.doesNotMatch(tokensCss, /#000000|#ffffff|#000\b|#fff\b/i);
   });
 });
 

@@ -1,6 +1,6 @@
 /*
  * Окна-диалоги «Витрувия»: проверка, заявка, бросок кубиков.
- * Бумажная основа, поля и кнопки — в components.css.
+ * Основа, поля и кнопки — в components.css.
  */
 
 .vitruvium.check-dialog,
@@ -19,5 +19,5 @@
 .vitruvium.application .form-footer {
   gap: var(--vit-space-2);
   padding-top: var(--vit-space-2);
-  border-top: var(--vit-rule);
+  border-top: 1px solid var(--vit-color-rule);
 }

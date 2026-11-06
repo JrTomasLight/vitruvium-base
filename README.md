@@ -74,4 +74,4 @@ https://github.com/JrTomasLight/vitruvium-base/releases/latest/download/system.j
 
 Чёткой лицензии на использование правил «Витрувия» пока нет. Все права на правила, название и материалы «Витрувия» принадлежат их правообладателям. Этот проект — фанатская некоммерческая реализация правил для Foundry VTT.
 
-Шрифты Alegreya и Alegreya SC (Huerta Tipográfica) распространяются по лицензии SIL Open Font License 1.1, её текст — в `fonts/OFL.txt`.
+Шрифты Forum (Денис Машаров) и Literata (The Literata Project Authors) распространяются по лицензии SIL Open Font License 1.1, её текст — в `fonts/OFL.txt`.

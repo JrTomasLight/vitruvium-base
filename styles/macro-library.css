@@ -1,6 +1,6 @@
 /*
  * Окно «Библиотека макросов».
- * Записи — строки, разделённые линиями построения, без карточек и теней.
+ * Записи — строки, разделённые тонкими линиями, без карточек и теней.
  */
 
 .vitruvium.macro-library .window-content {
@@ -20,11 +20,12 @@
 .vitruvium.macro-library .library-group-title {
   margin: 0 0 var(--vit-space-1);
   padding: 0 0 var(--vit-space-1);
-  font-family: var(--vit-font-caps);
-  font-size: var(--vit-step-1);
-  font-weight: 500;
-  color: var(--vit-color-text);
-  border-bottom: var(--vit-rule-strong);
+  font-family: var(--vit-font-display);
+  font-size: var(--vit-step-2);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: var(--vit-color-accent);
+  border-bottom: 1px solid var(--vit-color-control);
 }
 
 .vitruvium.macro-library .library-list {
@@ -39,7 +40,7 @@
   gap: var(--vit-space-3);
   align-items: center;
   padding: var(--vit-space-2) 0;
-  border-bottom: var(--vit-rule);
+  border-bottom: 1px solid var(--vit-color-rule);
 }
 
 .vitruvium.macro-library .library-entry:last-child {
@@ -54,6 +55,7 @@
   width: 40px;
   height: 40px;
   border: none;
+  border-radius: var(--vit-radius-control);
 }
 
 .vitruvium.macro-library .library-name {
@@ -61,7 +63,7 @@
   padding: 0;
   font-family: var(--vit-font-text);
   font-size: var(--vit-step-0);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--vit-color-text);
   border: none;
 }

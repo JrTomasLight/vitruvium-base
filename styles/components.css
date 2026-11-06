@@ -1,34 +1,30 @@
 /*
- * Общие компоненты «Витрувия»: бумажная основа окон, подписи, поля,
- * кнопки, отметки уровня и грань кубика.
+ * Общие компоненты «Витрувия»: основа окон, подписи, поля, кнопки,
+ * отметки уровня (ромбы), звёзды вдохновения, значки, грань кубика, логотип.
  *
- * Всё «бумажное» всегда светлое, даже в тёмной теме Foundry, поэтому
- * цвета текста, полей и кнопок заданы явно.
- * Корневой класс — .vitruvium (окна системы и карточки в чате).
+ * Цвета — только смысловые токены из tokens.css, поэтому всё работает
+ * в обеих темах. Корневой класс — .vitruvium (окна системы и карточки в чате).
  */
 
 /* ------------------------------------------------------------------ */
-/*  Бумажная основа окон системы                                       */
+/*  Основа окон                                                        */
 /* ------------------------------------------------------------------ */
 
 .vitruvium.application .window-content {
   color: var(--vit-color-text);
   font-family: var(--vit-font-text);
   font-size: var(--vit-step-0);
-  background:
-    radial-gradient(ellipse at 20% 0%, rgb(255 255 255 / 0.45), transparent 60%),
-    radial-gradient(ellipse at 100% 100%, rgb(176 141 60 / 0.18), transparent 55%),
-    var(--vit-parchment);
+  background: var(--vit-color-bg);
 }
 
-/* Подпись поля: настоящие капители Alegreya SC, а не «всё заглавными» */
+/* Подпись поля и заголовки — Forum, обычным регистром */
 .vitruvium .field-label,
 .vitruvium.application .form-group > label {
-  font-family: var(--vit-font-caps);
-  font-size: var(--vit-step--1);
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  color: var(--vit-color-text-muted);
+  font-family: var(--vit-font-display);
+  font-size: var(--vit-step-0);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--vit-color-accent);
 }
 
 .vitruvium.application .hint,
@@ -39,31 +35,36 @@
 }
 
 /* ------------------------------------------------------------------ */
-/*  Поля ввода: «чернильная» линия снизу                               */
+/*  Поля ввода                                                         */
 /* ------------------------------------------------------------------ */
 
 .vitruvium.application input[type="text"],
 .vitruvium.application input[type="number"],
 .vitruvium.application select,
 .vitruvium.application textarea {
+  box-sizing: border-box;
   height: auto;
-  padding: 2px 4px;
+  padding: 0.3em 0.6em;
   color: var(--vit-color-text);
   font-family: var(--vit-font-text);
   font-size: inherit;
-  background: transparent;
-  border: none;
-  border-bottom: var(--vit-rule-strong);
-  border-radius: 0;
+  background: var(--vit-color-bg-raised);
+  border: 1px solid var(--vit-color-control);
+  border-radius: var(--vit-radius-control);
   box-shadow: none;
+}
+
+.vitruvium.application select {
+  appearance: none;
+  padding-right: 1.8em;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23b8975a'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7em center;
 }
 
 .vitruvium.application textarea {
   min-height: 4.5em;
-  padding: var(--vit-space-1) var(--vit-space-2);
   line-height: 1.45;
-  border: var(--vit-rule-strong);
-  border-radius: var(--vit-radius-control);
   resize: vertical;
 }
 
@@ -71,51 +72,52 @@
 .vitruvium.application select:focus,
 .vitruvium.application textarea:focus {
   border-color: var(--vit-color-focus);
-  outline: none;
-  box-shadow: 0 1px 0 0 var(--vit-color-focus);
+  outline: 1px solid var(--vit-color-focus);
+  box-shadow: none;
 }
 
 .vitruvium.application input::placeholder,
 .vitruvium.application textarea::placeholder {
   color: var(--vit-color-text-muted);
-  opacity: 0.75;
+  opacity: 0.8;
   font-style: italic;
 }
 
 .vitruvium.application select option {
   color: var(--vit-color-text);
-  background: var(--vit-parchment);
+  background: var(--vit-color-bg-raised);
 }
 
 /* ------------------------------------------------------------------ */
-/*  Кнопки                                                             */
+/*  Кнопки: «пилюли»                                                   */
 /* ------------------------------------------------------------------ */
 
 /*
- * .vit-button — обычная кнопка действия: чернильный контур, без заливки.
- * .vit-button.primary — главное действие экрана: сангина и двойная рамка,
- * как у портрета. На экране не больше одной главной кнопки.
+ * .vit-button — кнопка действия: золотой контур, без заливки.
+ * .vit-button.primary — главное действие экрана: залита золотом.
+ * На экране не больше одной главной кнопки.
+ * .vit-icon-button — круглая кнопка-значок (в чат, править, удалить).
  */
 .vitruvium .vit-button,
 .vitruvium.application .form-footer button {
   display: inline-flex;
   flex: 0 0 auto;
-  gap: 0.4em;
+  gap: 0.5em;
   align-items: center;
   justify-content: center;
   width: auto;
   height: auto;
   min-height: 0;
   margin: 0;
-  padding: 0.3em 0.85em;
+  padding: 0.45em 1.3em;
   color: var(--vit-color-text);
   font-family: var(--vit-font-text);
   font-size: var(--vit-step-0);
   font-weight: 400;
   line-height: 1.2;
   background: transparent;
-  border: var(--vit-rule-strong);
-  border-radius: var(--vit-radius-control);
+  border: 1px solid var(--vit-color-control);
+  border-radius: var(--vit-radius-pill);
   box-shadow: none;
   cursor: pointer;
   transition: color var(--vit-transition), border-color var(--vit-transition), background-color var(--vit-transition);
@@ -129,8 +131,8 @@
 
 .vitruvium .vit-button:hover,
 .vitruvium.application .form-footer button:hover {
-  color: var(--vit-color-accent);
-  background: rgb(230 214 178 / 0.55);
+  color: var(--vit-color-text);
+  background: var(--vit-color-bg-raised);
   border-color: var(--vit-color-accent);
   box-shadow: none;
 }
@@ -138,66 +140,203 @@
 .vitruvium .vit-button.primary,
 .vitruvium.application .form-footer button.default,
 .vitruvium.application .form-footer button[autofocus] {
-  color: var(--vit-color-accent);
-  border-color: var(--vit-color-accent);
-  outline: 1px solid var(--vit-color-accent);
-  outline-offset: 2px;
+  color: var(--vit-color-on-accent);
+  background: var(--vit-color-accent-fill);
+  border-color: var(--vit-color-accent-fill);
+}
+
+.vitruvium .vit-button.primary:hover,
+.vitruvium.application .form-footer button.default:hover,
+.vitruvium.application .form-footer button[autofocus]:hover {
+  color: var(--vit-color-on-accent);
+  background: var(--vit-color-accent-fill);
+  filter: brightness(1.08);
 }
 
 .vitruvium .vit-button:disabled {
   color: var(--vit-color-text-muted);
   border-style: dashed;
-  border-color: var(--vit-line);
   background: transparent;
   cursor: default;
+  filter: none;
 }
 
-/* Фокус с клавиатуры: голубая грунтовка, у всех элементов одинаковый */
+.vitruvium .vit-icon-button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  color: var(--vit-color-accent);
+  font-size: var(--vit-step--1);
+  line-height: 1;
+  background: transparent;
+  border: 1px solid var(--vit-color-control);
+  border-radius: 50%;
+  box-shadow: none;
+  cursor: pointer;
+  transition: background-color var(--vit-transition), border-color var(--vit-transition);
+}
+
+.vitruvium .vit-icon-button:hover {
+  background: var(--vit-color-bg-raised);
+  border-color: var(--vit-color-accent);
+  box-shadow: none;
+}
+
+/* Фокус с клавиатуры: одинаковый у всех элементов */
 .vitruvium button:focus-visible,
 .vitruvium a:focus-visible,
 .vitruvium [tabindex]:focus-visible,
 .vitruvium.application .form-footer button:focus-visible {
-  outline: var(--vit-focus-ring);
+  outline: 2px solid var(--vit-color-focus);
   outline-offset: 2px;
   box-shadow: none;
 }
 
 /* ------------------------------------------------------------------ */
-/*  Отметки уровня (кружки): характеристики, вдохновение               */
+/*  Значок в круге (характеристика, домен)                             */
+/* ------------------------------------------------------------------ */
+
+.vitruvium .vit-chip {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--vit-chip-icon);
+  background: var(--vit-chip-bg);
+  border: 1px solid var(--vit-chip-line);
+  border-radius: 50%;
+}
+
+/* Картинка в круге: значок домена */
+.vitruvium .vit-chip-img {
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  object-fit: cover;
+  background: var(--vit-chip-bg);
+  border: 1px solid var(--vit-chip-line);
+  border-radius: 50%;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Отметки уровня: ромбы (характеристики, домены)                     */
 /* ------------------------------------------------------------------ */
 
 .vitruvium .pips {
   display: flex;
-  gap: 5px;
+  align-items: center;
+  gap: 6px;
 }
 
 .vitruvium .pip {
   flex: none;
-  width: 16px;
-  height: 16px;
+  width: 11px;
+  height: 11px;
   min-height: 0;
   padding: 0;
-  margin: 0;
+  margin: 2px;
   background: transparent;
-  border: 1.5px solid var(--vit-color-control);
-  border-radius: 50%;
+  border: 1px solid var(--vit-color-control);
+  border-radius: 2px;
   box-shadow: none;
+  transform: rotate(45deg);
   cursor: pointer;
   transition: background-color var(--vit-transition), border-color var(--vit-transition), transform var(--vit-transition);
 }
 
 .vitruvium .pip.filled {
-  background: radial-gradient(circle at 35% 35%, var(--vit-sanguine-soft), var(--vit-sanguine) 70%);
-  border-color: var(--vit-sanguine);
+  background: var(--vit-color-mark);
+  border-color: var(--vit-color-mark);
 }
 
 .vitruvium .pip:not(:disabled):hover {
-  border-color: var(--vit-sanguine);
-  transform: scale(1.15);
+  border-color: var(--vit-color-accent);
+  transform: rotate(45deg) scale(1.2);
 }
 
 .vitruvium .pip:disabled {
   cursor: default;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Звёзды вдохновения                                                 */
+/* ------------------------------------------------------------------ */
+
+/*
+ * Шестиконечная звезда с маленьким телом и острыми лучами (не гексаграмма).
+ * Звезда — SVG в шаблоне (<svg class="vit-star-shape">), цвет задают fill и stroke.
+ * Звёзды стоят в тёмной шапке, поэтому контур — линия шапки.
+ */
+.vitruvium .vit-stars {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.vitruvium .vit-star {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.vitruvium .vit-star-shape {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  transition: transform var(--vit-transition);
+}
+
+.vitruvium .vit-star-shape polygon {
+  fill: transparent;
+  stroke: var(--vit-band-line);
+  stroke-width: 1.1;
+  stroke-linejoin: miter;
+  transition: fill var(--vit-transition), stroke var(--vit-transition);
+}
+
+.vitruvium .vit-star.filled polygon {
+  fill: var(--vit-color-accent-fill);
+  stroke: var(--vit-color-accent-fill);
+}
+
+.vitruvium .vit-star:not(:disabled):hover .vit-star-shape {
+  transform: scale(1.15);
+}
+
+.vitruvium .vit-star:not(:disabled):hover polygon {
+  stroke: var(--vit-color-accent-fill);
+}
+
+.vitruvium .vit-star:disabled {
+  cursor: default;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Логотип «Витрувия»                                                 */
+/* ------------------------------------------------------------------ */
+
+.vitruvium .vit-logo {
+  display: block;
+  aspect-ratio: 2 / 1;
+  height: auto;
+  fill: currentColor;
+  color: var(--vit-color-accent-fill);
 }
 
 /* ------------------------------------------------------------------ */
@@ -212,17 +351,16 @@
   justify-content: center;
   width: 26px;
   height: 26px;
-  background: var(--vit-parchment);
-  border: 1.5px solid var(--vit-color-control);
-  border-radius: 3px;
+  background: var(--vit-color-bg-raised);
+  border: 1px solid var(--vit-color-control);
+  border-radius: 6px;
 }
 
-/* Вписанный круг — линия построения, как на рисунке Витрувианского человека */
 .vitruvium .vit-face::before {
   content: "";
   position: absolute;
   inset: 2px;
-  border: 1px solid var(--vit-line);
+  border: 1px solid var(--vit-color-rule);
   border-radius: 50%;
 }
 
@@ -230,19 +368,19 @@
   position: relative;
   width: 7px;
   height: 7px;
-  background: var(--vit-sanguine);
+  background: var(--vit-color-mark);
   border-radius: 50%;
 }
 
 .vitruvium .vit-face.successes-0 {
-  border-color: var(--vit-line);
+  border-color: var(--vit-color-rule);
 }
 
 .vitruvium .vit-face.successes-2 {
-  border-color: var(--vit-sanguine);
+  border-color: var(--vit-color-accent);
 }
 
 /* Стандартная подсказка броска Foundry для кубика dv */
 .dice-tooltip .roll.vitruvium-die {
-  color: var(--vit-sanguine);
+  color: var(--vit-color-accent);
 }

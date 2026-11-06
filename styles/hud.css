@@ -1,8 +1,8 @@
 /*
  * Кнопки «Витрувия» на HUD токена. Форма — стандартная кнопка HUD Foundry,
- * у звезды вдохновения цвет растёртой сангины, чтобы её было видно на тёмном фоне.
+ * звезда вдохновения — золотая, как звёзды в листе.
  */
 
 #token-hud .vitruvium-hud-button .fa-star {
-  color: var(--vit-sanguine-soft);
+  color: var(--vit-color-accent-fill);
 }
