@@ -1,0 +1,38 @@
+# Форма идеи в Discussions, категория Ideas (адрес категории — ideas).
+labels: ["идея"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Предложите, что добавить или изменить в системе. Что уже запланировано, видно в [плане разработки](https://github.com/JrTomasLight/vitruvium-base/blob/main/ROADMAP.md).
+        Система следует правилам «Витрувия» Beta 3.1. Механики, которых нет в правилах (бой, здоровье, развитие персонажа), без решения авторов правил не добавляются, но обсудить их можно.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Что затрагивает
+      options:
+        - Лист персонажа
+        - Проверки и кубики
+        - Домены, способности, атрибуты, имущество
+        - Вдохновение
+        - Статусы, уровни, аспекты
+        - Инструменты мастера и макросы
+        - Журналы и правила в Foundry
+        - Оформление
+        - Другое
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Идея
+      description: Что должно появиться или поменяться.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Зачем
+      description: Какую задачу за игровым столом это решает. Пример из вашей игры очень помогает.
+    validations:
+      required: true

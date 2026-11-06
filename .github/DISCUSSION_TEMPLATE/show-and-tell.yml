@@ -1,0 +1,13 @@
+# Форма рассказа об игре в Discussions, категория Show and tell (адрес категории — show-and-tell).
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Расскажите, как играете по «Витрувию» в Foundry: сеттинг, персонажи, макросы, скриншоты. Здесь можно похвастаться и подсмотреть идеи.
+  - type: textarea
+    id: story
+    attributes:
+      label: Рассказ
+      description: Скриншоты можно перетащить прямо в поле.
+    validations:
+      required: true

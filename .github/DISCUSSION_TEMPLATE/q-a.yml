@@ -1,0 +1,28 @@
+# Форма вопроса в Discussions, категория Q&A (адрес категории — q-a).
+labels: ["вопрос"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спросите, как что-то устроено в системе «Витрувий» для Foundry VTT или как сыграть по правилам в Foundry.
+        Сначала загляните в [руководство](https://github.com/JrTomasLight/vitruvium-base/blob/main/docs/GUIDE.md): возможно, ответ уже там.
+        Если что-то сломалось, лучше завести [сообщение об ошибке](https://github.com/JrTomasLight/vitruvium-base/issues/new/choose).
+  - type: textarea
+    id: question
+    attributes:
+      label: Вопрос
+      description: Что хотите сделать и что не получается.
+      placeholder: Как выдать вдохновение сразу нескольким персонажам?
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: Что уже пробовали
+      description: Необязательно. Поможет ответить быстрее.
+  - type: input
+    id: foundry
+    attributes:
+      label: Версия Foundry
+      description: Видна в левом нижнем углу экрана настройки Foundry.
+      placeholder: "13.351"
