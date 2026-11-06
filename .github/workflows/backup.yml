@@ -6,10 +6,11 @@
 # или удалят, копия останется. Восстановление описано в docs/BACKUP.md.
 #
 # Когда запускается:
-# - каждый понедельник;
-# - при каждом обновлении main;
+# - при каждом пуше в main и features — копия каждого состояния за 90 дней;
 # - при пуше тега backup/... — так отмечаем точку перед крупным изменением;
-# - вручную: Actions → Backup → Run workflow.
+# - каждый понедельник и вручную (Actions → Backup → Run workflow). Эти два
+#   запуска GitHub берёт только из ветки по умолчанию, то есть заработают,
+#   когда этот файл попадёт в main.
 
 name: Backup
 
@@ -17,7 +18,7 @@ on:
   schedule:
     - cron: "17 3 * * 1"
   push:
-    branches: [main]
+    branches: [main, features]
     tags: ["backup/**"]
   workflow_dispatch:
 
