@@ -1,7 +1,7 @@
 /**
  * «Витрувий» — игровая система для Foundry VTT v13.
  * Точка входа: регистрирует справочник правил, кубик, документы, листы,
- * быстрые действия и библиотеку макросов.
+ * быстрые действия, библиотеку макросов и журналы системы.
  */
 import { VITRUVIUM } from "./config.mjs";
 import { CharacterData } from "./data/character.mjs";
@@ -16,6 +16,7 @@ import { addTokenHUDButtons } from "./hud.mjs";
 import { MacroLibrary, addLibraryButton, openMacroLibrary } from "./apps/macro-library.mjs";
 import { MACRO_LIBRARY, addToHotbar, onHotbarDrop } from "./macros/library.mjs";
 import { registerDiceSoNice } from "./integrations/dice-so-nice.mjs";
+import { registerJournalSettings, syncSystemJournals } from "./journals/sync.mjs";
 
 Hooks.once("init", () => {
   console.log("Витрувий | Инициализация системы");
@@ -49,6 +50,9 @@ Hooks.once("init", () => {
     { types: ["character"], makeDefault: true, label: "VITRUVIUM.Sheet.Character" }
   );
 
+  // Настройки
+  registerJournalSettings();
+
   // Необязательные модули
   registerDiceSoNice();
 });
@@ -62,3 +66,6 @@ Hooks.on("renderTokenHUD", addTokenHUDButtons);
 // Библиотека макросов: кнопка во вкладке «Макросы» и перетаскивание на панель
 Hooks.on("renderMacroDirectory", addLibraryButton);
 Hooks.on("hotbarDrop", onHotbarDrop);
+
+// Журналы системы: «Изменения системы» и «Правила Beta 3.1»
+Hooks.once("ready", syncSystemJournals);
