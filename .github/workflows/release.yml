@@ -38,7 +38,7 @@ jobs:
           mv system.json.tmp system.json
 
       - name: Собрать архив системы
-        run: zip -r vitruvium.zip system.json module lang styles templates fonts assets README.md
+        run: zip -r vitruvium.zip system.json module lang styles templates fonts assets journals README.md CHANGELOG.md
 
       - name: Создать релиз
         env:
