@@ -1,0 +1,12 @@
+# Форма общего обсуждения в Discussions, категория General (адрес категории — general).
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Обсуждение всего, что связано с системой «Витрувий» для Foundry VTT. Для вопросов есть категория Q&A, для предложений — Ideas.
+  - type: textarea
+    id: topic
+    attributes:
+      label: О чём поговорим
+    validations:
+      required: true

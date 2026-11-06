@@ -1,0 +1,53 @@
+name: Ошибка
+description: Что-то в системе работает не так, как написано в руководстве или правилах.
+labels: ["ошибка"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Спасибо, что сообщаете! Чем точнее шаги, тем быстрее исправим.
+  - type: textarea
+    id: what
+    attributes:
+      label: Что случилось
+      description: Что вы видите и что ожидали увидеть.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Как повторить
+      placeholder: |
+        1. Открыть лист персонажа
+        2. Нажать «Проверка»
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: foundry
+    attributes:
+      label: Версия Foundry
+      placeholder: "13.351"
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Версия системы
+      description: Номер релиза или, если ставили через git, дата последнего `git pull`.
+  - type: textarea
+    id: modules
+    attributes:
+      label: Включённые модули
+      description: Особенно Dice So Nice!. Проверьте, повторяется ли ошибка без модулей.
+  - type: textarea
+    id: console
+    attributes:
+      label: Ошибки в консоли
+      description: Нажмите F12, вкладка Console. Скопируйте красные строки.
+      render: text
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Скриншоты
+      description: Можно перетащить прямо в поле.
