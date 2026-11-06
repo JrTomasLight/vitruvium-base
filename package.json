@@ -11,6 +11,13 @@
     "odds": "node scripts/odds.mjs",
     "build:rules": "node scripts/build-rules.mjs",
     "backup": "node scripts/backup.mjs",
-    "package": "node scripts/package.mjs"
+    "package": "node scripts/package.mjs",
+    "lint": "eslint . && node scripts/lint-templates.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "eslint": "9.39.1",
+    "globals": "16.5.0",
+    "handlebars": "4.7.8"
   }
 }

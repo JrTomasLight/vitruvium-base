@@ -27,10 +27,11 @@ export function escapeHTML(text) {
  */
 export function renderInline(text) {
   // Код вынимаем первым, чтобы звёздочки и подчёркивания внутри него не трогать.
+  // На его место ставим метку из символов частной области Юникода: в тексте их не бывает.
   const codes = [];
   let html = text.replace(/`([^`]+)`/g, (_, code) => {
     codes.push(`<code>${escapeHTML(code)}</code>`);
-    return `\u0000${codes.length - 1}\u0000`;
+    return `\uE000${codes.length - 1}\uE001`;
   });
   html = escapeHTML(html);
   html = html.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, label, href) => {
@@ -41,7 +42,7 @@ export function renderInline(text) {
   html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
   html = html.replace(/(^|[^*\w])\*(?!\s)(.+?)\*(?![*\w])/g, "$1<em>$2</em>");
   html = html.replace(/(^|[^_\p{L}\d])_(?!\s)(.+?)_(?![_\p{L}\d])/gu, "$1<em>$2</em>");
-  return html.replace(/\u0000(\d+)\u0000/g, (_, index) => codes[Number(index)]);
+  return html.replace(/\uE000(\d+)\uE001/g, (_, index) => codes[Number(index)]);
 }
 
 /**

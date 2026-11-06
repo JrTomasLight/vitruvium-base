@@ -4,6 +4,8 @@
 #
 # - test: автотесты (`npm test`), нужные части Foundry заменены заглушками
 #   (tests/helpers/foundry.mjs). Без зависимостей.
+# - lint: ESLint по коду, тестам и скриптам и проверка Handlebars-шаблонов
+#   (`npm run lint`, пакеты ставятся `npm ci`).
 # - package: собирает vitruvium.zip тем же скриптом, что и релиз
 #   (scripts/package.mjs), и прикладывает к запуску. Архив можно скачать
 #   внизу страницы запуска, в «Artifacts», и поставить в Foundry вручную.
@@ -32,6 +34,24 @@ jobs:
 
       - name: Запустить тесты
         run: npm test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить код
+        uses: actions/checkout@v4
+
+      - name: Установить Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Установить пакеты для разработки
+        run: npm ci
+
+      - name: ESLint и шаблоны
+        run: npm run lint
 
   package:
     runs-on: ubuntu-latest
