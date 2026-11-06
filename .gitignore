@@ -12,3 +12,6 @@ ignored-docs/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Пакеты для разработки (npm ci): ESLint, Handlebars, Playwright
+node_modules/
