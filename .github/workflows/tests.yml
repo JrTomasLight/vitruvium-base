@@ -6,6 +6,10 @@
 #   (tests/helpers/foundry.mjs). Без зависимостей.
 # - lint: ESLint по коду, тестам и скриптам и проверка Handlebars-шаблонов
 #   (`npm run lint`, пакеты ставятся `npm ci`).
+# - preview: превью листа, окон и карточек чата со стилями и шаблонами системы
+#   (`npm run preview`), скриншоты в тёмной и светлой теме и проверка доступности
+#   axe-core. Скриншоты — в «Artifacts» запуска. Падает при нарушениях уровня
+#   serious и critical.
 # - package: собирает vitruvium.zip тем же скриптом, что и релиз
 #   (scripts/package.mjs), и прикладывает к запуску. Архив можно скачать
 #   внизу страницы запуска, в «Artifacts», и поставить в Foundry вручную.
@@ -52,6 +56,48 @@ jobs:
 
       - name: ESLint и шаблоны
         run: npm run lint
+
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить код
+        uses: actions/checkout@v4
+
+      - name: Установить Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Установить пакеты и браузер
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Превью, скриншоты и доступность
+        run: npm run preview -- --out preview
+
+      - name: Итог проверки доступности
+        if: always()
+        run: |
+          {
+            echo "## Доступность (axe-core)"
+            echo
+            echo '```'
+            cat preview/accessibility.txt 2>/dev/null || echo "Отчёта нет: превью не собралось, смотрите лог."
+            echo '```'
+            echo
+            echo "Скриншоты — внизу страницы, в «Artifacts»."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Приложить скриншоты к запуску
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-${{ github.sha }}
+          path: preview/
+          retention-days: 30
+          if-no-files-found: warn
 
   package:
     runs-on: ubuntu-latest

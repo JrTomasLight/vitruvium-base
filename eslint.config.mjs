@@ -37,8 +37,13 @@ export default [
     languageOptions: { globals: { ...globals.node } }
   },
   {
-    // Тесты подменяют Foundry заглушками в глобальной области (tests/helpers/foundry.mjs).
+    // Тесты и превью подменяют Foundry заглушками в глобальной области (tests/helpers/foundry.mjs),
+    // а превью ещё выполняет код в браузере (document).
     files: ["tests/**/*.mjs"],
     languageOptions: { globals: { ...globals.node, ...foundryGlobals } }
+  },
+  {
+    files: ["scripts/preview.mjs"],
+    languageOptions: { globals: { ...globals.node, ...globals.browser, ...foundryGlobals } }
   }
 ];
