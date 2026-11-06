@@ -38,7 +38,7 @@ jobs:
           STAMP="$(date -u +%Y-%m-%d-%H%M)"
           NAME="vitruvium-backup-${STAMP}"
           git -C repo.git bundle create "../${NAME}.bundle" --all
-          git bundle verify "${NAME}.bundle"
+          git -C repo.git bundle verify "../${NAME}.bundle"
           echo "name=${NAME}" >> "$GITHUB_OUTPUT"
           {
             echo "## Резервная копия ${NAME}"
