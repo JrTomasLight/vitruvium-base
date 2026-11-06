@@ -1,0 +1,60 @@
+# Резервная копия репозитория.
+#
+# Делает полную копию всех веток и тегов одним файлом (git bundle)
+# и сохраняет её в GitHub Actions как артефакт на 90 дней.
+# Артефакт хранится отдельно от веток: если ветку случайно перезапишут
+# или удалят, копия останется. Восстановление описано в docs/BACKUP.md.
+#
+# Когда запускается:
+# - каждый понедельник;
+# - при каждом обновлении main;
+# - при пуше тега backup/... — так отмечаем точку перед крупным изменением;
+# - вручную: Actions → Backup → Run workflow.
+
+name: Backup
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  push:
+    branches: [main]
+    tags: ["backup/**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скопировать все ветки и теги
+        run: git clone --mirror "${{ github.server_url }}/${{ github.repository }}.git" repo.git
+
+      - name: Собрать файл копии
+        id: bundle
+        run: |
+          STAMP="$(date -u +%Y-%m-%d-%H%M)"
+          NAME="vitruvium-backup-${STAMP}"
+          git -C repo.git bundle create "../${NAME}.bundle" --all
+          git bundle verify "${NAME}.bundle"
+          echo "name=${NAME}" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Резервная копия ${NAME}"
+            echo
+            echo "Повод: \`${{ github.event_name }}\` (${{ github.ref_name }})."
+            echo "Файл копии лежит внизу страницы, в «Artifacts», 90 дней."
+            echo
+            echo "| Ветка или тег | Коммит |"
+            echo "|---|---|"
+            git -C repo.git for-each-ref --format='| `%(refname:short)` | `%(objectname:short)` |' refs/heads refs/tags
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Сохранить копию
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.bundle.outputs.name }}
+          path: ${{ steps.bundle.outputs.name }}.bundle
+          retention-days: 90
+          compression-level: 0
+          if-no-files-found: error
