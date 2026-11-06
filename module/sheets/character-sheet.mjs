@@ -7,14 +7,15 @@ const TEMPLATES = "systems/vitruvium/templates/actor";
  * Лист персонажа игрока (ApplicationV2).
  *
  * Состоит из шапки (портрет, имя, концепция, уровень, вдохновение,
- * кнопки «Проверка» и «Заявка») и вкладок «Характеристики» и «Биография».
+ * кнопки «Проверка» и «Способность») и вкладок «Характеристики»,
+ * «Способности» (домены) и «Биография».
  * Поля формы сохраняются сразу при изменении.
  */
 export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   /** @override */
   static DEFAULT_OPTIONS = {
     classes: ["vitruvium", "character-sheet"],
-    position: { width: 640, height: 720 },
+    position: { width: 680, height: 780 },
     window: { resizable: true },
     form: { submitOnChange: true },
     actions: {
@@ -22,8 +23,13 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
       setCharacteristic: VitruviumCharacterSheet.#onSetCharacteristic,
       rollCharacteristic: VitruviumCharacterSheet.#onRollCharacteristic,
       rollCheck: VitruviumCharacterSheet.#onRollCheck,
-      declare: VitruviumCharacterSheet.#onDeclare,
-      setInspiration: VitruviumCharacterSheet.#onSetInspiration
+      showAbilities: VitruviumCharacterSheet.#onShowAbilities,
+      setInspiration: VitruviumCharacterSheet.#onSetInspiration,
+      createDomain: VitruviumCharacterSheet.#onCreateDomain,
+      editDomain: VitruviumCharacterSheet.#onEditDomain,
+      deleteDomain: VitruviumCharacterSheet.#onDeleteDomain,
+      setDomainLevel: VitruviumCharacterSheet.#onSetDomainLevel,
+      shareAbility: VitruviumCharacterSheet.#onShareAbility
     }
   };
 
@@ -32,12 +38,14 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
     header: { template: `${TEMPLATES}/character-header.hbs` },
     tabs: { template: `${TEMPLATES}/tabs.hbs` },
     characteristics: { template: `${TEMPLATES}/character-characteristics.hbs`, scrollable: [""] },
+    abilities: { template: `${TEMPLATES}/character-abilities.hbs`, scrollable: [""] },
     biography: { template: `${TEMPLATES}/character-biography.hbs`, scrollable: [""] }
   };
 
   /** Вкладки листа. `id` совпадает с именем части в PARTS. */
   static SHEET_TABS = [
     { id: "characteristics", icon: "fa-solid fa-circle-nodes", label: "VITRUVIUM.Tab.Characteristics" },
+    { id: "abilities", icon: "fa-solid fa-wand-sparkles", label: "VITRUVIUM.Tab.Abilities" },
     { id: "biography", icon: "fa-solid fa-feather-pointed", label: "VITRUVIUM.Tab.Biography" }
   ];
 
@@ -80,7 +88,8 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
       tabs: this.#prepareTabs(),
       tierOptions,
       tierHint: game.i18n.localize(config.tiers[system.tier]?.hint ?? ""),
-      inspirationPips
+      inspirationPips,
+      inspirationCount: game.i18n.format("VITRUVIUM.Sheet.InspirationCount", system.inspiration)
     });
   }
 
@@ -93,6 +102,11 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
       case "characteristics":
         context.characteristics = this.#prepareCharacteristics();
         context.budget = context.system.creation.characteristics;
+        break;
+      case "abilities":
+        context.domains = this.#prepareDomains();
+        context.budget = { ...context.system.creation.domains, max: CONFIG.VITRUVIUM.domains.maxCount };
+        context.canAddDomain = this.isEditable && (context.budget.count < CONFIG.VITRUVIUM.domains.maxCount);
         break;
       case "biography":
         context.biographyField = context.system.schema.fields.biography;
@@ -149,6 +163,39 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
     });
   }
 
+  /**
+   * Домены персонажа со способностями для вкладки «Способности».
+   * @returns {object[]}
+   */
+  #prepareDomains() {
+    const { min, max } = CONFIG.VITRUVIUM.domains.levelRange;
+    return this.document.itemTypes.domain
+      .sort((a, b) => (a.sort - b.sort) || a.name.localeCompare(b.name))
+      .map(domain => {
+        const level = domain.system.level;
+        const pips = [];
+        for ( let value = min; value <= max; value++ ) {
+          pips.push({ value, filled: value <= level, label: game.i18n.format("VITRUVIUM.Domain.SetLevel", { value }) });
+        }
+        const limit = domain.system.abilityLimit;
+        return {
+          id: domain.id,
+          name: domain.name,
+          img: domain.img,
+          level,
+          description: domain.system.description,
+          pips,
+          abilities: domain.system.abilities.map((ability, index) => ({
+            ...ability,
+            index,
+            name: ability.name || game.i18n.localize("VITRUVIUM.Ability.Unnamed"),
+            locked: index >= limit
+          })),
+          shareLabel: game.i18n.format("VITRUVIUM.Ability.ToChatNamed", { name: domain.name })
+        };
+      });
+  }
+
   /* -------------------------------------------- */
   /*  Действия                                    */
   /* -------------------------------------------- */
@@ -197,12 +244,11 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
   }
 
   /**
-   * Кнопка «Заявка» в шапке: заявить действие и цель персонажа.
+   * Кнопка «Способность» в шапке: открыть вкладку «Способности».
    * @this {VitruviumCharacterSheet}
    */
-  static async #onDeclare(event, target) {
-    if ( !this.document.isOwner ) return;
-    return game.vitruvium.actions.declare({ actor: this.document });
+  static async #onShowAbilities(event, target) {
+    this.changeTab("abilities", "primary");
   }
 
   /**
@@ -217,5 +263,65 @@ export class VitruviumCharacterSheet extends HandlebarsApplicationMixin(ActorShe
     const current = this.document.system.inspiration.value;
     const value = clicked === current ? clicked - 1 : clicked;
     return this.document.update({ "system.inspiration.value": value });
+  }
+
+  /** Домен по `data-domain-id` ближайшей строки. */
+  #domainFrom(target) {
+    const id = target.closest("[data-domain-id]")?.dataset.domainId;
+    return id ? this.document.items.get(id) : null;
+  }
+
+  /**
+   * Новый домен: создать и открыть его лист.
+   * @this {VitruviumCharacterSheet}
+   */
+  static async #onCreateDomain(event, target) {
+    if ( !this.isEditable ) return;
+    const [domain] = await this.document.createEmbeddedDocuments("Item", [{
+      type: "domain",
+      name: game.i18n.localize("VITRUVIUM.Domain.New")
+    }]);
+    domain?.sheet.render({ force: true });
+  }
+
+  /** @this {VitruviumCharacterSheet} */
+  static async #onEditDomain(event, target) {
+    this.#domainFrom(target)?.sheet.render({ force: true });
+  }
+
+  /**
+   * Удалить домен после подтверждения.
+   * @this {VitruviumCharacterSheet}
+   */
+  static async #onDeleteDomain(event, target) {
+    if ( !this.isEditable ) return;
+    const domain = this.#domainFrom(target);
+    if ( !domain ) return;
+    const confirmed = await foundry.applications.api.DialogV2.confirm({
+      window: { title: game.i18n.localize("VITRUVIUM.Domain.DeleteTitle") },
+      content: `<p>${game.i18n.format("VITRUVIUM.Domain.DeleteConfirm", { name: foundry.utils.escapeHTML(domain.name) })}</p>`,
+      classes: ["vitruvium"]
+    });
+    if ( confirmed ) await domain.delete();
+  }
+
+  /** @this {VitruviumCharacterSheet} */
+  static async #onSetDomainLevel(event, target) {
+    if ( !this.isEditable ) return;
+    return this.#domainFrom(target)?.update({ "system.level": Number(target.dataset.value) });
+  }
+
+  /**
+   * Показать домен или способность в чате.
+   * @this {VitruviumCharacterSheet}
+   */
+  static async #onShareAbility(event, target) {
+    const domain = this.#domainFrom(target);
+    const index = target.dataset.abilityIndex;
+    return game.vitruvium.actions.shareAbility({
+      actor: this.document,
+      domain,
+      abilityIndex: index === undefined ? undefined : Number(index)
+    });
   }
 }

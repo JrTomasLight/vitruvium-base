@@ -1,0 +1,13 @@
+<div class="vitruvium chat-card ability-card">
+  <header class="card-header">
+    <h3 class="card-title">{{title}}</h3>
+    <p class="card-meta"><span>{{subtitle}}</span></p>
+  </header>
+  {{#if description}}<p class="card-text">{{description}}</p>{{/if}}
+  <footer class="card-actions">
+    <button type="button" class="vit-button" data-vitruvium-action="abilityCheck">
+      <i class="fa-solid fa-dice" inert></i>
+      <span>{{localize "VITRUVIUM.Ability.Check"}}</span>
+    </button>
+  </footer>
+</div>

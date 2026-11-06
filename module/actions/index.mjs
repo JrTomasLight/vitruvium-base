@@ -6,6 +6,7 @@
  * живёт здесь, а макросы — одна строка. Поэтому обновление системы
  * сразу доходит и до уже созданных макросов.
  */
+import { shareAbility } from "./abilities.mjs";
 import { resolveActor } from "./actors.mjs";
 import { declare } from "./declaration.mjs";
 import { rollDice } from "./dice.mjs";
@@ -24,4 +25,4 @@ async function check({ actor, characteristic } = {}) {
   return actor.rollCharacteristic(characteristic);
 }
 
-export const actions = { check, declare, rollDice, awardInspiration };
+export const actions = { check, declare, rollDice, awardInspiration, shareAbility };

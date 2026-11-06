@@ -1,0 +1,61 @@
+<div class="domain-form">
+  <header class="domain-header">
+    <img class="domain-icon vit-chip-img" src="{{item.img}}" alt="" data-action="editIcon" data-tooltip="VITRUVIUM.Domain.EditIcon">
+    <div class="domain-title">
+      <input class="domain-name" type="text" name="name" value="{{item.name}}"
+             placeholder="{{localize 'VITRUVIUM.Domain.NamePlaceholder'}}"
+             aria-label="{{localize 'VITRUVIUM.Domain.Name'}}">
+      <div class="domain-level" role="group" aria-label="{{localize 'VITRUVIUM.Domain.Level'}}">
+        <span class="field-label">{{localize "VITRUVIUM.Domain.Level"}}</span>
+        <div class="pips">
+          {{#each levelPips as |pip|}}
+          <button type="button" class="pip {{#if pip.filled}}filled{{/if}}" data-action="setLevel" data-value="{{pip.value}}"
+                  aria-label="{{pip.label}}" aria-pressed="{{#if pip.filled}}true{{else}}false{{/if}}"
+                  {{#unless ../editable}}disabled{{/unless}}></button>
+          {{/each}}
+        </div>
+        <span class="domain-level-value">{{system.level}}</span>
+      </div>
+    </div>
+    <button type="button" class="vit-icon-button" data-action="share" data-tooltip="VITRUVIUM.Ability.ToChat"
+            aria-label="{{localize 'VITRUVIUM.Ability.ToChat'}}"><i class="fa-solid fa-comment" inert></i></button>
+  </header>
+
+  <label class="field-label" for="{{item.id}}-description">{{localize "VITRUVIUM.Domain.Description"}}</label>
+  <textarea id="{{item.id}}-description" name="system.description" rows="2"
+            placeholder="{{localize 'VITRUVIUM.Domain.DescriptionPlaceholder'}}">{{system.description}}</textarea>
+
+  <div class="abilities-head">
+    <h2 class="abilities-title">{{localize "VITRUVIUM.Domain.Abilities"}}</h2>
+    <span class="hint">{{abilityCount}}</span>
+  </div>
+  <ol class="abilities">
+    {{#each abilities as |ability|}}
+    <li class="ability {{#if ability.locked}}locked{{/if}}">
+      <div class="ability-fields">
+        <input type="text" name="system.abilities.{{ability.index}}.name" value="{{ability.name}}"
+               placeholder="{{localize 'VITRUVIUM.Domain.AbilityName'}}" aria-label="{{localize 'VITRUVIUM.Domain.AbilityName'}}">
+        <textarea name="system.abilities.{{ability.index}}.description" rows="2"
+                  placeholder="{{localize 'VITRUVIUM.Domain.AbilityDescription'}}"
+                  aria-label="{{localize 'VITRUVIUM.Domain.AbilityDescription'}}">{{ability.description}}</textarea>
+        {{#if ability.locked}}<p class="hint">{{localize "VITRUVIUM.Domain.Locked"}}</p>{{/if}}
+      </div>
+      <div class="ability-buttons">
+        <button type="button" class="vit-icon-button" data-action="share" data-index="{{ability.index}}"
+                data-tooltip="VITRUVIUM.Ability.ToChat" aria-label="{{localize 'VITRUVIUM.Ability.ToChat'}}"><i class="fa-solid fa-comment" inert></i></button>
+        {{#if ../editable}}
+        <button type="button" class="vit-icon-button" data-action="removeAbility" data-index="{{ability.index}}"
+                data-tooltip="VITRUVIUM.Domain.RemoveAbility" aria-label="{{localize 'VITRUVIUM.Domain.RemoveAbility'}}"><i class="fa-solid fa-trash" inert></i></button>
+        {{/if}}
+      </div>
+    </li>
+    {{else}}
+    <li class="hint empty">{{localize "VITRUVIUM.Domain.NoAbilities"}}</li>
+    {{/each}}
+  </ol>
+  {{#if canAdd}}
+  <button type="button" class="vit-button" data-action="addAbility">
+    <i class="fa-solid fa-plus" inert></i><span>{{localize "VITRUVIUM.Domain.AddAbility"}}</span>
+  </button>
+  {{/if}}
+</div>

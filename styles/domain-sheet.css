@@ -1,0 +1,116 @@
+/*
+ * Лист домена: название, уровень, описание и способности.
+ * Общие компоненты — в components.css.
+ */
+
+.vitruvium.domain-sheet .window-content {
+  padding: var(--vit-space-4) var(--vit-space-5);
+}
+
+.vitruvium.domain-sheet .domain-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vit-space-3);
+}
+
+.vitruvium.domain-sheet .domain-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--vit-space-3);
+  align-items: center;
+}
+
+.vitruvium.domain-sheet .domain-icon {
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+}
+
+.vitruvium.domain-sheet .domain-name {
+  width: 100%;
+  font-family: var(--vit-font-display);
+  font-size: var(--vit-step-3);
+  letter-spacing: 0.03em;
+  background: transparent;
+  border-color: transparent;
+}
+
+.vitruvium.domain-sheet .domain-name:hover {
+  border-color: var(--vit-color-control);
+}
+
+.vitruvium.domain-sheet .domain-level {
+  display: flex;
+  gap: var(--vit-space-3);
+  align-items: center;
+  margin-top: var(--vit-space-1);
+}
+
+.vitruvium.domain-sheet .domain-level-value {
+  font-family: var(--vit-font-display);
+  font-size: var(--vit-step-2);
+  color: var(--vit-color-accent);
+}
+
+.vitruvium.domain-sheet .abilities-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--vit-color-control);
+}
+
+.vitruvium.domain-sheet .abilities-title {
+  margin: 0;
+  padding: 0;
+  font-family: var(--vit-font-display);
+  font-size: var(--vit-step-2);
+  font-weight: 400;
+  color: var(--vit-color-accent);
+  border: none;
+}
+
+.vitruvium.domain-sheet .abilities {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vit-space-3);
+  max-height: 50vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.vitruvium.domain-sheet .ability {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--vit-space-2);
+  align-items: start;
+}
+
+.vitruvium.domain-sheet .ability.locked {
+  opacity: 0.65;
+}
+
+.vitruvium.domain-sheet .ability-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vit-space-1);
+}
+
+.vitruvium.domain-sheet .ability-fields input {
+  font-weight: 600;
+}
+
+.vitruvium.domain-sheet .ability-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vit-space-1);
+}
+
+.vitruvium.domain-sheet .domain-form > .vit-button {
+  align-self: center;
+}
+
+.vitruvium.domain-sheet .domain-title {
+  min-width: 0;
+}

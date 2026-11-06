@@ -165,3 +165,46 @@ describe("Подпись режима броска", () => {
     assert.equal(advantageLabel(-2), "Две помехи");
   });
 });
+
+describe("Способность в чат: actions.shareAbility", () => {
+  const domain = {
+    name: "Фехтование",
+    system: {
+      level: 2,
+      description: "Владение мечом и щитом.",
+      abilities: [{ name: "Выпад-молния", description: "Стремительный выпад." }, { name: "", description: "" }]
+    }
+  };
+
+  it("способность: название, домен с уровнем, описание и кнопка проверки", async () => {
+    const actor = character();
+    await actions.shareAbility({ actor, domain, abilityIndex: 0 });
+    const { template, data } = env.renders.at(-1);
+    assert.equal(template, "systems/vitruvium/templates/chat/ability-card.hbs");
+    assert.deepEqual(data, {
+      title: "Выпад-молния",
+      subtitle: "Фехтование, уровень 2",
+      description: "Стремительный выпад.",
+      actorName: actor.name
+    });
+    assert.deepEqual(env.messages.at(-1).flags.vitruvium.ability, { actorUuid: actor.uuid, domain: "Фехтование", abilityIndex: 0 });
+  });
+
+  it("домен как самостоятельная способность", async () => {
+    await actions.shareAbility({ actor: character(), domain });
+    const { data } = env.renders.at(-1);
+    assert.equal(data.title, "Фехтование");
+    assert.equal(data.subtitle, "Домен, уровень 2");
+  });
+
+  it("способность без названия получает подпись", async () => {
+    await actions.shareAbility({ actor: character(), domain, abilityIndex: 1 });
+    assert.equal(env.renders.at(-1).data.title, "Способность без названия");
+  });
+
+  it("нет такой способности — предупреждение, без сообщения", async () => {
+    assert.equal(await actions.shareAbility({ actor: character(), domain, abilityIndex: 9 }), null);
+    assert.equal(env.warnings.length, 1);
+    assert.equal(env.messages.length, 0);
+  });
+});

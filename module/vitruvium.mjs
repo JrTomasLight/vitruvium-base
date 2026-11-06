@@ -1,11 +1,14 @@
 /**
  * «Витрувий» — игровая система для Foundry VTT v13.
- * Точка входа: регистрирует справочник правил, кубик, документы, листы,
+ * Точка входа: регистрирует справочник правил, кубик, документы (персонаж, домен), листы,
  * быстрые действия, библиотеку макросов и журналы системы.
  */
 import { VITRUVIUM } from "./config.mjs";
 import { CharacterData } from "./data/character.mjs";
 import { VitruviumActor } from "./documents/actor.mjs";
+import { DomainData } from "./data/domain.mjs";
+import { VitruviumItem } from "./documents/item.mjs";
+import { VitruviumDomainSheet } from "./sheets/domain-sheet.mjs";
 import { VitruviumCharacterSheet } from "./sheets/character-sheet.mjs";
 import { VitruviumDie } from "./dice/vitruvium-die.mjs";
 import { rollCheck } from "./dice/check.mjs";
@@ -44,10 +47,19 @@ Hooks.once("init", () => {
     character: { bar: ["inspiration"], value: [] }
   };
 
+  // Предметы: домены со способностями
+  CONFIG.Item.documentClass = VitruviumItem;
+  CONFIG.Item.dataModels.domain = DomainData;
+
   // Листы
-  foundry.applications.apps.DocumentSheetConfig.registerSheet(
+  const { DocumentSheetConfig } = foundry.applications.apps;
+  DocumentSheetConfig.registerSheet(
     foundry.documents.Actor, "vitruvium", VitruviumCharacterSheet,
     { types: ["character"], makeDefault: true, label: "VITRUVIUM.Sheet.Character" }
+  );
+  DocumentSheetConfig.registerSheet(
+    foundry.documents.Item, "vitruvium", VitruviumDomainSheet,
+    { types: ["domain"], makeDefault: true, label: "VITRUVIUM.Sheet.Domain" }
   );
 
   // Настройки

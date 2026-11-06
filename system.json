@@ -22,6 +22,7 @@
     "styles/tokens.css",
     "styles/components.css",
     "styles/character-sheet.css",
+    "styles/domain-sheet.css",
     "styles/chat.css",
     "styles/dialogs.css",
     "styles/macro-library.css",
@@ -42,8 +43,13 @@
   "documentTypes": {
     "Actor": {
       "character": {
-        "htmlFields": ["biography"]
+        "htmlFields": [
+          "biography"
+        ]
       }
+    },
+    "Item": {
+      "domain": {}
     }
   },
   "relationships": {

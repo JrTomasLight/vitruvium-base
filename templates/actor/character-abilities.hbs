@@ -1,0 +1,61 @@
+<section class="tab abilities {{tab.cssClass}}" data-group="primary" data-tab="abilities">
+  <p class="budget {{#if budget.overspent}}overspent{{/if}}" data-tooltip="VITRUVIUM.Sheet.DomainBudgetHint">
+    {{localize "VITRUVIUM.Sheet.DomainBudgetLine" spent=budget.spent budget=budget.budget count=budget.count max=budget.max}}
+  </p>
+
+  {{#each domains as |domain|}}
+  <section class="domain" data-domain-id="{{domain.id}}">
+    <div class="domain-head">
+      <img class="vit-chip-img" src="{{domain.img}}" alt="">
+      <div class="domain-info">
+        <h2 class="domain-name">
+          <button type="button" class="domain-edit" data-action="editDomain" data-tooltip="VITRUVIUM.Domain.Edit">{{domain.name}}</button>
+        </h2>
+        {{#if domain.description}}<p class="domain-description">{{domain.description}}</p>{{/if}}
+      </div>
+      <span class="domain-level">{{domain.level}}</span>
+      <div class="pips" role="group" aria-label="{{localize 'VITRUVIUM.Domain.Level'}}">
+        {{#each domain.pips as |pip|}}
+        <button type="button" class="pip {{#if pip.filled}}filled{{/if}}" data-action="setDomainLevel" data-value="{{pip.value}}"
+                aria-label="{{pip.label}}" aria-pressed="{{#if pip.filled}}true{{else}}false{{/if}}"
+                {{#unless @root.editable}}disabled{{/unless}}></button>
+        {{/each}}
+      </div>
+      <div class="domain-buttons">
+        <button type="button" class="vit-icon-button" data-action="shareAbility"
+                data-tooltip="VITRUVIUM.Ability.ToChat" aria-label="{{domain.shareLabel}}"><i class="fa-solid fa-comment" inert></i></button>
+        {{#if @root.editable}}
+        <button type="button" class="vit-icon-button" data-action="editDomain"
+                data-tooltip="VITRUVIUM.Domain.Edit" aria-label="{{localize 'VITRUVIUM.Domain.Edit'}}"><i class="fa-solid fa-pen" inert></i></button>
+        <button type="button" class="vit-icon-button" data-action="deleteDomain"
+                data-tooltip="VITRUVIUM.Domain.Delete" aria-label="{{localize 'VITRUVIUM.Domain.Delete'}}"><i class="fa-solid fa-trash" inert></i></button>
+        {{/if}}
+      </div>
+    </div>
+
+    <ul class="ability-list">
+      {{#each domain.abilities as |ability|}}
+      <li class="ability {{#if ability.locked}}locked{{/if}}">
+        <div class="ability-info">
+          <h3 class="ability-name">{{ability.name}}</h3>
+          {{#if ability.description}}<p class="ability-description">{{ability.description}}</p>{{/if}}
+          {{#if ability.locked}}<p class="hint">{{localize "VITRUVIUM.Domain.Locked"}}</p>{{/if}}
+        </div>
+        <button type="button" class="vit-icon-button" data-action="shareAbility" data-ability-index="{{ability.index}}"
+                data-tooltip="VITRUVIUM.Ability.ToChat" aria-label="{{localize 'VITRUVIUM.Ability.ToChat'}}: {{ability.name}}"><i class="fa-solid fa-comment" inert></i></button>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+  {{else}}
+  <p class="hint empty">{{localize "VITRUVIUM.Domain.Empty"}}</p>
+  {{/each}}
+
+  {{#if canAddDomain}}
+  <div class="domain-add">
+    <button type="button" class="vit-button" data-action="createDomain">
+      <i class="fa-solid fa-plus" inert></i><span>{{localize "VITRUVIUM.Domain.Add"}}</span>
+    </button>
+  </div>
+  {{/if}}
+</section>

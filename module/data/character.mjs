@@ -1,4 +1,5 @@
 import { VITRUVIUM } from "../config.mjs";
+import { domainBudget } from "./creation.mjs";
 
 const { HTMLField, NumberField, SchemaField, StringField } = foundry.data.fields;
 
@@ -14,7 +15,9 @@ const { HTMLField, NumberField, SchemaField, StringField } = foundry.data.fields
  *
  * Вычисляемые поля (не сохраняются):
  * - `creation.characteristics` — бюджет очков характеристик по уровню
- *   персонажа и сколько из него потрачено.
+ *   персонажа и сколько из него потрачено;
+ * - `creation.domains` — то же для очков доменов (сумма уровней доменов)
+ *   и число доменов (не больше 6).
  */
 export class CharacterData extends foundry.abstract.TypeDataModel {
   /** @override */
@@ -63,7 +66,8 @@ export class CharacterData extends foundry.abstract.TypeDataModel {
         spent,
         remaining: budget - spent,
         overspent: spent > budget
-      }
+      },
+      domains: domainBudget(this.parent?.itemTypes?.domain?.map(domain => domain.system.level) ?? [], budget)
     };
   }
 }

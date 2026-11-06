@@ -11,6 +11,11 @@ const CHAT_ACTIONS = {
   declarationCheck: {
     actor: message => fromUuidSync(message.getFlag("vitruvium", "declaration")?.actorUuid ?? ""),
     run: actor => actor.rollCharacteristic()
+  },
+  /** Карточка способности: открыть окно проверки для её владельца. */
+  abilityCheck: {
+    actor: message => fromUuidSync(message.getFlag("vitruvium", "ability")?.actorUuid ?? ""),
+    run: actor => actor.rollCharacteristic()
   }
 };
 

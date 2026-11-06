@@ -1,4 +1,6 @@
 <header class="sheet-header">
+  <svg class="vit-logo" viewBox="0 0 604 302" aria-hidden="true" focusable="false"><path d="M0 0 204 97 302 301 97 205Z M604 0 507 205 302 301 399 97Z"/></svg>
+
   <div class="portrait-frame">
     <img class="portrait" src="{{actor.img}}" alt="{{actor.name}}"
          data-action="editPortrait" data-tooltip="VITRUVIUM.Sheet.EditPortrait">
@@ -13,25 +15,22 @@
            placeholder="{{localize 'VITRUVIUM.Sheet.ConceptPlaceholder'}}"
            aria-label="{{localize 'VITRUVIUM.Sheet.Concept'}}">
 
-    <div class="header-row">
-      <label class="tier" data-tooltip="{{tierHint}}">
-        <span class="field-label">{{localize "VITRUVIUM.Tier.Label"}}</span>
-        <select name="system.tier">
-          {{selectOptions tierOptions selected=system.tier}}
-        </select>
-      </label>
+    <div class="header-meta">
+      <label class="field-label" for="{{actor.id}}-tier">{{localize "VITRUVIUM.Tier.Label"}}</label>
+      <select id="{{actor.id}}-tier" class="tier" name="system.tier" data-tooltip="{{tierHint}}">
+        {{selectOptions tierOptions selected=system.tier}}
+      </select>
 
-      <div class="inspiration" role="group" aria-label="{{localize 'VITRUVIUM.Sheet.Inspiration'}}"
-           data-tooltip="VITRUVIUM.Sheet.InspirationHint">
-        <span class="field-label">{{localize "VITRUVIUM.Sheet.Inspiration"}}</span>
-        <div class="pips">
+      <span class="field-label" data-tooltip="VITRUVIUM.Sheet.InspirationHint">{{localize "VITRUVIUM.Sheet.Inspiration"}}</span>
+      <div class="inspiration" role="group" aria-label="{{localize 'VITRUVIUM.Sheet.Inspiration'}}">
+        <div class="vit-stars">
           {{#each inspirationPips as |pip|}}
-          <button type="button" class="pip {{#if pip.filled}}filled{{/if}}"
+          <button type="button" class="vit-star {{#if pip.filled}}filled{{/if}}"
                   data-action="setInspiration" data-value="{{pip.value}}"
-                  aria-label="{{pip.label}}" aria-pressed="{{#if pip.filled}}true{{else}}false{{/if}}"></button>
+                  aria-label="{{pip.label}}" aria-pressed="{{#if pip.filled}}true{{else}}false{{/if}}"><svg class="vit-star-shape" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polygon points="12,1 13.95,8.62 21.53,6.5 15.9,12 21.53,17.5 13.95,15.38 12,23 10.05,15.38 2.47,17.5 8.1,12 2.47,6.5 10.05,8.62"/></svg></button>
           {{/each}}
         </div>
-        <span class="counter">{{system.inspiration.value}}/{{system.inspiration.max}}</span>
+        <span class="counter">{{inspirationCount}}</span>
       </div>
     </div>
 
@@ -41,9 +40,9 @@
         <i class="fa-solid fa-dice" inert></i>
         <span>{{localize "VITRUVIUM.Sheet.Check"}}</span>
       </button>
-      <button type="button" class="vit-button" data-action="declare">
-        <i class="fa-solid fa-hand" inert></i>
-        <span>{{localize "VITRUVIUM.Sheet.Declare"}}</span>
+      <button type="button" class="vit-button" data-action="showAbilities">
+        <i class="fa-solid fa-wand-sparkles" inert></i>
+        <span>{{localize "VITRUVIUM.Sheet.Ability"}}</span>
       </button>
     </div>
     {{/if}}
